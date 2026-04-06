@@ -1,12 +1,13 @@
 'use client';
 
 import { useRouter, usePathname } from 'next/navigation';
-import { Home, CheckSquare, Leaf } from 'lucide-react';
+import { Home, CheckSquare, Leaf, Calendar } from 'lucide-react';
 import { motion } from 'motion/react';
 
 const tabs = [
     { id: 'dashboard', label: 'Dashboard', icon: Home, href: '/dashboard' },
     { id: 'habit', label: 'Habit', icon: Leaf, href: '/register-habit' },
+    { id: 'calendar', label: 'Calendar', icon: Calendar, href: '/calendar' },
 ];
 
 export function Sidebar() {
@@ -17,7 +18,9 @@ export function Sidebar() {
         ? 'habit'
         : pathname.startsWith('/dashboard')
             ? 'dashboard'
-            : 'dashboard';
+            : pathname.startsWith('/calendar')
+                ? 'calendar'
+                : 'dashboard';
 
     const handleTabClick = (href: string) => {
         router.push(href);
