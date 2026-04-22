@@ -1,37 +1,51 @@
-import { supabase } from "../../lib/supabase/client";
+import { createClient } from "@/app/lib/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
 
-// habitテーブルからデータを取得
+
 export async function GET() {
-    const { data, error } = await supabase.from("habits").select("*");
-    if (error) {
-        return NextResponse.json({ error: error.message }, { status: 500 });
+    const supabase = await createClient();
+
+    //ログイン中のユーザー情報を取得
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+    if(authError || !user) {
+        return NextResponse.json({error: "Unauthorized"}, { status: 401});
     }
-    return NextResponse.json({ habits: data });
+
+    //すべてのhabitデータからuser_idと一致したものを取得
+    const { data, error } = await supabase.from("habits").select("*").eq("user_id", user.id);
+
+    if(error) return NextResponse.json({ error: error.message}, { status: 500});
+
+    return NextResponse.json({ habits: data});
 }
 
-export async function POST(request: NextRequest) {
-    try {
-        const body = await request.json();
+export async function POST(req: NextRequest) {
+    const supabase = await createClient();
 
-        // フロントの型を DBのカラム名に合わせたオブジェクトに変換
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if(authError || !user) {
+        return NextResponse.json({error: "Unauthorized"}, { status: 401});
+    } 
+
+    try {
+        const body = await req.json();
         const { data, error } = await supabase.from("habits").insert([
             {
                 id: body.id,
+                user_id: user.id,
                 title: body.title,
                 timeBlock: body.timeBlock,
                 targetDays: body.targetDays,
                 isCompleted: body.isCompleted,
                 createdAt: body.createdAt,
             }
-        ]).select();
+        ]).eq("user_id", user.id).select();
 
-        if (error) {
-            console.error("Supabase Error:", error); // サーバーログで詳細を確認
-            return NextResponse.json({ error: error.message }, { status: 500 });
-        }
-        return NextResponse.json({ message: "Success", data });
-    } catch (err) {
-        return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
+        if(error) return NextResponse.json({ error: error.message}, { status: 500});
+
+        return NextResponse.json({ message: "NEW HABIT POST SUCCESS", data});
+    } catch { 
+        return NextResponse.json({ error: "Invalid request body"}, { status: 400});
     }
 }
