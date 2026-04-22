@@ -17,7 +17,7 @@ export async function login(email: string, password: string) {
     }
 
     revalidatePath('/', 'layout')
-    redirect('/register-habit')
+    redirect('/dashboard');
 }
 
 export async function signup(userName: string, email: string, password: string) {
