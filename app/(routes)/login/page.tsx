@@ -74,7 +74,7 @@ export default function UserLoginPage() {
                             <Label className="font-bold underline">
                                 <Link href="/register">登録はこちら</Link>
                             </Label>
-                            <Button type="submit" onClick={handleSubmit}>ログイン</Button>
+                            <Button type="submit">ログイン</Button>
                         </div>
                     </form>
                 </CardContent>

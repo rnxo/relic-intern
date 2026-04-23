@@ -1,9 +1,9 @@
 "use client";
 
 import { Suspense } from "react";
-import HabitCardList from "@/app/(routes)/dashboard/_components/HabitCardList";
-import PetView from "@/app/(routes)/dashboard/_components/PetView";
-import LumiConsultation from "@/app/(routes)/dashboard/_components/LumiConsultation";
+import HabitCardList from "./_components/HabitCardList";
+import PetView from "./_components/PetView";
+import LumiConsultation from "./_components/LumiConsultation";
 import { Loader2 } from "lucide-react";
 
 export default function DashBoardPage() {

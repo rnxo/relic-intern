@@ -9,6 +9,19 @@ const tabs = [
     { id: 'habit', label: 'Habit', icon: Leaf, href: '/register-habit' },
 ];
 
+export default function PagesLayout({
+    children,
+}: Readonly<{
+    children: React.ReactNode;
+}>) {
+    return (
+        <div className="ml-20">
+            <Sidebar/>
+            { children }
+        </div>
+    )
+}
+
 export function Sidebar() {
     const router = useRouter();
     const pathname = usePathname();
