@@ -17,7 +17,7 @@ export default function HabitCardList() {
     const midnightHabits = habits?.filter(h => h.timeBlock === 'midnight') || [];
 
     return (
-        <div className="flex flex-col flex-1 py-12 px-8 space-y-10 min-h-screen bg-[#1a1b26]">
+        <div className="flex flex-col flex-1 py-12 px-8 space-y-10 min-h-screen bg-lumi-base">
             {/* Header Section */}
             <div className="flex justify-between items-start">
                 <div className="space-y-2">
