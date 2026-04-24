@@ -92,54 +92,153 @@ function SignUpForm() {
 
 export default function UserRegisterPage() {
     return (
-        <div className="fixed inset-0 flex items-center justify-center bg-lumi-sidebar p-8">
-            <div className="flex w-full max-w-215 min-h-145 rounded-2xl overflow-hidden border border-lumi-primary/15">
+        <>
+            <style>{`
+                @keyframes lumi-drift-a {
+                    from { transform: translate(0px,  0px)  scale(1);    }
+                    to   { transform: translate(50px, 70px) scale(1.10); }
+                }
+                @keyframes lumi-drift-b {
+                    from { transform: translate(0px,   0px)  scale(1);    }
+                    to   { transform: translate(-60px,-45px) scale(1.12); }
+                }
+                @keyframes lumi-drift-c {
+                    from { transform: translate(0px,  0px)  scale(1);    }
+                    to   { transform: translate(35px,-55px) scale(1.08); }
+                }
+            `}</style>
 
-                {/* 左カラム（ブランドエリア） */}
-                <div className="flex-1 bg-lumi-base flex flex-col items-center justify-center p-8 border-r border-lumi-primary/15 relative overflow-hidden">
+            <div className="fixed inset-0 overflow-hidden flex items-center justify-center p-8">
+
+                {/* ── 背景 1: ダークベース ── */}
+                <div className="absolute inset-0" style={{
+                    background: "radial-gradient(ellipse 160% 110% at 60% 115%, #07080f 0%, #0b0c1b 50%, #111224 100%)"
+                }} />
+
+                {/* ── 背景 2: ブルーネビュラ（左上） ── */}
+                <div className="absolute rounded-full pointer-events-none" style={{
+                    width: 700, height: 700, top: -250, left: -190,
+                    background: "radial-gradient(circle, rgba(122,162,247,0.6) 0%, rgba(74,114,200,0.2) 42%, transparent 70%)",
+                    filter: "blur(72px)",
+                    opacity: 0.55,
+                    animation: "lumi-drift-a 22s ease-in-out infinite alternate"
+                }} />
+
+                {/* ── 背景 3: パープルネビュラ（右下） ── */}
+                <div className="absolute rounded-full pointer-events-none" style={{
+                    width: 580, height: 580, bottom: -190, right: -150,
+                    background: "radial-gradient(circle, rgba(187,154,247,0.55) 0%, rgba(139,92,246,0.16) 44%, transparent 70%)",
+                    filter: "blur(82px)",
+                    opacity: 0.52,
+                    animation: "lumi-drift-b 26s ease-in-out infinite alternate"
+                }} />
+
+                {/* ── 背景 4: シアンアクセント（中央右） ── */}
+                <div className="absolute rounded-full pointer-events-none" style={{
+                    width: 400, height: 290, top: "38%", right: "12%",
+                    background: "radial-gradient(circle, rgba(125,207,255,0.32) 0%, transparent 70%)",
+                    filter: "blur(90px)",
+                    opacity: 0.28,
+                    animation: "lumi-drift-c 32s ease-in-out infinite alternate"
+                }} />
+
+                {/* ── 背景 5: グレインノイズ ── */}
+                <div className="absolute inset-0 pointer-events-none" style={{
+                    backgroundImage: "url(\"data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='256' height='256'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='4' stitchTiles='stitch'/></filter><rect width='256' height='256' filter='url(%23n)' opacity='0.07'/></svg>\")",
+                    backgroundSize: "256px 256px",
+                    opacity: 0.45
+                }} />
+
+                {/* ── 背景 6: ビネット ── */}
+                <div className="absolute inset-0 pointer-events-none" style={{
+                    background: "radial-gradient(ellipse 82% 82% at 50% 50%, transparent 32%, rgba(4,5,13,0.82) 100%)"
+                }} />
+
+                {/* ── フロストガラスカード ── */}
+                <div
+                    className="relative z-10 flex w-full max-w-[860px] min-h-[580px] rounded-2xl overflow-hidden"
+                    style={{
+                        border: "0.5px solid rgba(122,162,247,0.18)",
+                        boxShadow: [
+                            "0 0 0 0.5px rgba(122,162,247,0.06)",
+                            "0 40px 80px rgba(0,0,0,0.55)",
+                            "0 0 140px rgba(122,162,247,0.06)",
+                        ].join(", ")
+                    }}
+                >
+                    {/* 左カラム（ブランドエリア） */}
                     <div
-                        className="absolute inset-0 pointer-events-none"
-                        style={{ background: "radial-gradient(circle 150px at 50% 40%, rgba(122,162,247,0.08) 0%, transparent 100%)" }}
-                    />
-                    <div className="absolute w-45 h-45 rounded-full bg-lumi-primary/25 -bottom-15 -left-15 pointer-events-none" />
-                    <div className="absolute w-45 h-45 rounded-full bg-lumi-secondary/25 top-8 -right-8 pointer-events-none" />
-
-                    <Image alt="lumi-svg" src="/lumi-lv1.svg" width={100} height={100} />
-                    <Label className="text-[2.8rem] font-bold text-lumi-fg tracking-tight relative z-10 leading-none">Lumi</Label>
-                    <Label className="text-[0.85rem] text-lumi-muted/60 mt-2 uppercase tracking-widest relative z-10">あなただけの相棒</Label>
-                    <span className="mt-4 inline-flex items-center gap-1 text-[0.68rem] px-3 py-1 rounded-full border border-lumi-secondary/30 text-lumi-secondary/80 bg-lumi-secondary/10 relative z-10">
-                        ✦ 感情を持つAIペットと共に成長
-                    </span>
-                </div>
-
-                {/* 右カラム（フォームエリア） */}
-                <div className="flex-[1.2] bg-lumi-sidebar flex flex-col justify-center px-8 py-10">
-
-                    <Button
-                        type="button"
-                        variant="outline"
-                        disabled
-                        className="w-full h-auto py-2.5 rounded-lg bg-lumi-surface/60 border-lumi-primary/20 text-lumi-muted/70 hover:bg-lumi-primary/6 hover:border-lumi-primary/45 hover:text-lumi-muted/70"
+                        className="flex-1 flex flex-col items-center justify-center p-8 relative overflow-hidden backdrop-blur-2xl"
+                        style={{
+                            background: "rgba(26,27,38,0.62)",
+                            borderRight: "0.5px solid rgba(122,162,247,0.12)"
+                        }}
                     >
-                        <GoogleIcon />
-                        Googleで続ける
-                    </Button>
+                        <div className="absolute inset-0 pointer-events-none" style={{
+                            background: "radial-gradient(circle 160px at 50% 38%, rgba(122,162,247,0.07) 0%, transparent 100%)"
+                        }} />
+                        <div className="absolute w-[180px] h-[180px] rounded-full -bottom-[60px] -left-[60px] pointer-events-none" style={{
+                            background: "rgba(122,162,247,0.14)", filter: "blur(40px)"
+                        }} />
+                        <div className="absolute w-[120px] h-[120px] rounded-full top-[30px] -right-[30px] pointer-events-none" style={{
+                            background: "rgba(187,154,247,0.14)", filter: "blur(36px)"
+                        }} />
 
-                    <div className="flex items-center gap-3 my-5">
-                        <div className="flex-1 h-px bg-lumi-primary/15" />
-                        <span className="text-[0.72rem] text-lumi-muted/35 tracking-[0.06em]">または</span>
-                        <div className="flex-1 h-px bg-lumi-primary/15" />
+                        <Image alt="lumi-svg" src="/lumi-lv1.svg" width={100} height={100} className="relative z-10" />
+                        <Label className="text-[2.8rem] font-bold text-lumi-fg tracking-tight relative z-10 leading-none select-none">Lumi</Label>
+                        <Label className="text-[0.85rem] text-lumi-muted/60 mt-2 uppercase tracking-widest relative z-10">あなただけの相棒</Label>
+                        <span className="mt-4 inline-flex items-center gap-1 text-[0.68rem] px-3 py-1 rounded-full relative z-10" style={{
+                            border: "0.5px solid rgba(187,154,247,0.3)",
+                            color: "rgba(187,154,247,0.8)",
+                            background: "rgba(187,154,247,0.08)"
+                        }}>
+                            ✦ 感情を持つAIペットと共に成長
+                        </span>
                     </div>
-                    <SignUpForm />
-                    <p className="text-center text-[0.73rem] text-lumi-muted/35 leading-relaxed mt-6">
-                        すでにアカウントをお持ちの方は{" "}
-                        <Link href="/login" className="text-lumi-primary/65 hover:underline">
-                            ログイン
-                        </Link>
-                    </p>
+
+                    {/* 右カラム（フォームエリア） */}
+                    <div
+                        className="flex-[1.2] flex flex-col justify-center px-8 py-10 backdrop-blur-2xl"
+                        style={{ background: "rgba(18,19,28,0.78)" }}
+                    >
+                        <Button
+                            type="button"
+                            variant="outline"
+                            disabled
+                            className="w-full h-auto py-2.5 rounded-lg text-sm text-lumi-muted/70 hover:text-lumi-muted/70"
+                            style={{
+                                background: "rgba(255,255,255,0.03)",
+                                border: "0.5px solid rgba(122,162,247,0.2)"
+                            }}
+                        >
+                            <GoogleIcon />
+                            Googleで続ける
+                        </Button>
+
+                        <div className="flex items-center gap-3 my-5">
+                            <div className="flex-1 h-px" style={{ background: "rgba(122,162,247,0.14)" }} />
+                            <span className="text-[0.72rem] tracking-[0.06em]" style={{ color: "rgba(169,177,214,0.32)" }}>
+                                または
+                            </span>
+                            <div className="flex-1 h-px" style={{ background: "rgba(122,162,247,0.14)" }} />
+                        </div>
+
+                        <SignUpForm />
+
+                        <p className="text-center text-[0.73rem] leading-relaxed mt-6" style={{ color: "rgba(169,177,214,0.35)" }}>
+                            すでにアカウントをお持ちの方は{" "}
+                            <Link
+                                href="/login"
+                                className="hover:underline transition-opacity hover:opacity-80"
+                                style={{ color: "rgba(122,162,247,0.6)" }}
+                            >
+                                ログイン
+                            </Link>
+                        </p>
+                    </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 }
 
