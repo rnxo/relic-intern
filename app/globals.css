@@ -43,8 +43,23 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+
+  /* Lumi カラートークン — bg-lumi-* / text-lumi-* / border-lumi-* として使用可能 */
+  --color-lumi-base:           var(--lumi-base);
+  --color-lumi-sidebar:        var(--lumi-sidebar);
+  --color-lumi-surface:        var(--lumi-surface);
+  --color-lumi-primary:        var(--lumi-primary);
+  --color-lumi-primary-hover:  var(--lumi-primary-hover);
+  --color-lumi-secondary:      var(--lumi-secondary);
+  --color-lumi-border:         var(--lumi-border);
+  --color-lumi-muted:          var(--lumi-muted);
+  --color-lumi-fg:             var(--lumi-fg);
+  --color-lumi-track:          var(--lumi-track);
+  --color-lumi-pet-owl:        var(--lumi-pet-owl);
+  --color-lumi-pet-lumi:       var(--lumi-pet-lumi);
 }
 
+/* ライトモード */
 :root {
   --radius: 0.625rem;
   --background: oklch(1 0 0);
@@ -78,8 +93,23 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+
+  /* Lumi パレット — ライトモード */
+  --lumi-base:          #f5f6fc; /* メイン背景 */
+  --lumi-sidebar:       #eaecf7; /* サイドバー背景 */
+  --lumi-surface:       #ffffff; /* カード/パネル */
+  --lumi-primary:       #4a7ef5; /* Lumiブルー */
+  --lumi-primary-hover: #1ea8f0; /* Lumiシアン（ホバー） */
+  --lumi-secondary:     #8b5cf6; /* Lumiパープル */
+  --lumi-border:        #d0d5ed; /* ボーダー */
+  --lumi-muted:         #6872a3; /* ミュートテキスト */
+  --lumi-fg:            #1e2030; /* メインテキスト */
+  --lumi-track:         #e2e5f5; /* プログレスバー背景 */
+  --lumi-pet-owl:       #f0ebfa; /* Owlモードのペット背景 */
+  --lumi-pet-lumi:      #e8f0fe; /* Lumiモードのペット背景 */
 }
 
+/* ダークモード（Tokyo Night） */
 .dark {
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
@@ -112,15 +142,27 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+
+  /* Lumi パレット — ダークモード（Tokyo Night） */
+  --lumi-base:          #1a1b26; /* メイン背景 */
+  --lumi-sidebar:       #16161e; /* サイドバー背景 */
+  --lumi-surface:       #24283b; /* カード/パネル */
+  --lumi-primary:       #7aa2f7; /* Lumiブルー */
+  --lumi-primary-hover: #7dcfff; /* Lumiシアン（ホバー） */
+  --lumi-secondary:     #bb9af7; /* Lumiパープル */
+  --lumi-border:        #414868; /* ボーダー */
+  --lumi-muted:         #9aa5ce; /* ミュートテキスト */
+  --lumi-fg:            #c0caf5; /* メインテキスト */
+  --lumi-track:         #1c2238; /* プログレスバー背景 */
+  --lumi-pet-owl:       #2a1f4a; /* Owlモードのペット背景 */
+  --lumi-pet-lumi:      #1e2a40; /* Lumiモードのペット背景 */
 }
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
-    @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
     @apply bg-background text-foreground;
   }
 }
