@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from 'next/server';
 // 認証不要の公開ルート
 const PUBLIC_PATHS = ['/', '/login', '/register'];
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
     let supabaseResponse = NextResponse.next({ request })
 
     const supabase = createServerClient(

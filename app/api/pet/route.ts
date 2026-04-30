@@ -3,7 +3,11 @@ import { supabase } from "../../lib/supabase/client";
 
 //pet関連のデータを取得
 export async function GET() {
-    const { data, error } = await supabase.from("pet").select("*").single();
+    const { data, error } = await supabase
+        .from("pet")
+        .select("*")
+        //.eq("user_id", user.id)
+        .single();
     if (error) {
         return NextResponse.json({ error: error.message }, { status: 500 });
     }
