@@ -17,7 +17,7 @@ export async function createClient() {
                             cookieStore.set(name, value, options)
                         )
                     } catch {
-                        //server componentsが呼び出せた場合はmiddlewareが処理する
+                        //server componentsが呼び出せた場合はproxyが処理する
                     }
                 }
             }

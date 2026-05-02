@@ -1,6 +1,6 @@
 import { GoogleGenAI } from "@google/genai";
 import { NextRequest, NextResponse } from "next/server";
-import { supabase } from "@/app/lib/supabase/client";
+import { createClient } from "@/app/lib/supabase/server";
 import { Pet } from "@/app/types/pet";
 import { NewPetComment } from "@/app/types/petComment";
 
@@ -21,6 +21,7 @@ function getLevelTone(level: number): string {
 }
 
 export async function POST(req: NextRequest) {
+    const supabase = createClient();
     try {
         const { pet, completedCount, context, trigger } = await req.json() as {
             pet: Pet;
@@ -115,6 +116,7 @@ ${context ? `【議論コンテキスト】: ${context}` : ""}
 
 // --- GET: 最新のセリフを取得 ---
 export async function GET(req: NextRequest) {
+    const supabase = createClient();
     try {
         const { searchParams } = new URL(req.url);
         const petId = searchParams.get("petId");

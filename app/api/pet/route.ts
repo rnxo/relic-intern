@@ -1,34 +1,41 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabase } from "../../lib/supabase/client";
+import { createClient } from "@/app/lib/supabase/server";
 
 //pet関連のデータを取得
 export async function GET() {
-    const { data, error } = await supabase
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    
+    if(!user) {
+        return NextResponse.json({ error: "Unauthorized"}, { status: 401});
+    }
+    const { data: { pet } , error } = await supabase
         .from("pet")
         .select("*")
-        //.eq("user_id", user.id)
+        .eq("user_id", user.id)
         .single();
     if (error) {
         return NextResponse.json({ error: error.message }, { status: 500 });
     }
-    return NextResponse.json({ pet: data });
+    return NextResponse.json(pet);
 }
 
 //pet関連のデータを更新
 export async function PUT(req: NextRequest) {
+    const supabase = await createClient();
     const updates = await req.json();
 
-    // 現在のペットを取得（本当は認証からuserIdを取得すべきですが、今は簡易的に最初の1件を更新）
-    const { data: pet, error: fetchError } = await supabase.from("pet").select("id").single();
+    const { data: { user } } = await supabase.auth.getUser();
 
-    if (fetchError || !pet) {
-        return NextResponse.json({ error: "Pet not found" }, { status: 404 });
+    //認証チェック
+    if(!user) {
+        return NextResponse.json({ error: "Unauthorized"}, { status: 401});
     }
 
     const { data, error } = await supabase
         .from("pet")
         .update(updates)
-        .eq("id", pet.id)
+        .eq("user_id", user.id)
         .select()
         .single();
 

@@ -1,6 +1,5 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { NextRequest, NextResponse } from "next/server";
-import { supabase } from "@/app/lib/supabase/client";
 
 export async function POST(req: NextRequest) {
     try {

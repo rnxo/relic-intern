@@ -1,9 +1,10 @@
 import { GoogleGenAI } from "@google/genai";
 import { NextRequest, NextResponse } from "next/server";
-import { supabase } from "@/app/lib/supabase/client";
+import { createClient } from "@/app/lib/supabase/server";
 
 // --- GET: 最新の相談履歴/提案を取得 ---
 export async function GET(req: NextRequest) {
+    const supabase = await createClient();
     try {
         const { searchParams } = new URL(req.url);
         const petId = searchParams.get("petId");
@@ -28,13 +29,14 @@ export async function GET(req: NextRequest) {
                 created_at: data.created_at
             }
         });
-    } catch (error) {
+    } catch {
         return NextResponse.json({ insight: null });
     }
 }
 
 // --- POST: 新しい解析またはチャットの生成 ---
 export async function POST(req: NextRequest) {
+    const supabase = createClient();
     try {
         const body = await req.json();
         const { petId, mode, habitHistory, message, context } = body;
