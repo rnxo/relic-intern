@@ -6,12 +6,9 @@ import { useAtomValue } from 'jotai';
 import { habitsAtom } from '@/app/store/habitAtom';
 import MonthView from './_components/MonthView';
 
-type TabType = 'day' | 'week' | 'month';
-
 function CalendarContent() {
     const habits = useAtomValue(habitsAtom);
     const today = new Date();
-    const [tab, setTab] = useState<TabType>('month');
     const [year, setYear] = useState(today.getFullYear());
     const [month, setMonth] = useState(today.getMonth());
 
@@ -39,22 +36,6 @@ function CalendarContent() {
                 </div>
             </div>
 
-            {/* Tab switcher */}
-            <div className="flex bg-[#24283b] rounded-2xl p-1 mb-6">
-                {(['day', 'week', 'month'] as TabType[]).map((t) => (
-                    <button
-                        key={t}
-                        onClick={() => setTab(t)}
-                        className={`flex-1 py-3 rounded-xl text-sm font-semibold transition-all ${tab === t
-                            ? 'bg-[#7aa2f7] text-white shadow-md'
-                            : 'text-[#9aa5ce] hover:text-[#c0caf5]'
-                            }`}
-                    >
-                        {t === 'day' ? 'Day' : t === 'week' ? 'Week' : 'Month'}
-                    </button>
-                ))}
-            </div>
-
             {/* Month navigation */}
             <div className="flex items-center justify-between mb-4">
                 <button
@@ -73,19 +54,7 @@ function CalendarContent() {
             </div>
 
             {/* Calendar */}
-            {tab === 'month' && (
-                <MonthView year={year} month={month} habits={habits} />
-            )}
-            {tab === 'week' && (
-                <div className="flex-1 flex items-center justify-center text-[#9aa5ce]">
-                    週表示は準備中です
-                </div>
-            )}
-            {tab === 'day' && (
-                <div className="flex-1 flex items-center justify-center text-[#9aa5ce]">
-                    日表示は準備中です
-                </div>
-            )}
+            <MonthView year={year} month={month} habits={habits} />
         </div>
     );
 }
