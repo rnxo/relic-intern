@@ -39,11 +39,18 @@ export async function proxy(request: NextRequest) {
         return NextResponse.redirect(url);
     }
 
+    const { pathname } = request.nextUrl;
+    if (user && (pathname === '/login' || pathname === '/register')) {
+        const url = request.nextUrl.clone()
+        url.pathname = '/dashboard'
+        return NextResponse.redirect(url)
+    }
+
     return supabaseResponse
 }
 
 export const config = {
     matcher: [
-        '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+        '/((?!api|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
     ],
 }

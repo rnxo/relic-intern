@@ -46,7 +46,6 @@
 
   /* Lumi カラートークン — bg-lumi-* / text-lumi-* / border-lumi-* として使用可能 */
   --color-lumi-base:           var(--lumi-base);
-  --color-lumi-sidebar:        var(--lumi-sidebar);
   --color-lumi-surface:        var(--lumi-surface);
   --color-lumi-primary:        var(--lumi-primary);
   --color-lumi-primary-hover:  var(--lumi-primary-hover);
@@ -96,7 +95,6 @@
 
   /* Lumi パレット — ライトモード */
   --lumi-base:          #f5f6fc; /* メイン背景 */
-  --lumi-sidebar:       #eaecf7; /* サイドバー背景 */
   --lumi-surface:       #ffffff; /* カード/パネル */
   --lumi-primary:       #4a7ef5; /* Lumiブルー */
   --lumi-primary-hover: #1ea8f0; /* Lumiシアン（ホバー） */
@@ -145,7 +143,6 @@
 
   /* Lumi パレット — ダークモード（Tokyo Night） */
   --lumi-base:          #1a1b26; /* メイン背景 */
-  --lumi-sidebar:       #16161e; /* サイドバー背景 */
   --lumi-surface:       #24283b; /* カード/パネル */
   --lumi-primary:       #7aa2f7; /* Lumiブルー */
   --lumi-primary-hover: #7dcfff; /* Lumiシアン（ホバー） */

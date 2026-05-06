@@ -8,7 +8,7 @@ import { Loader2 } from "lucide-react";
 
 export default function DashBoardPage() {
     return (
-        <div className="flex w-full min-h-screen bg-[#1a1b26] pl-20 transition-all duration-300">
+        <div className="flex w-full min-h-screen bg-[#1a1b26] transition-all duration-300">
             {/* Control Panel / Pet Section (Left) */}
             <aside className="w-[450px] border-r border-[#414868]/30 overflow-y-auto hidden lg:block">
                 <Suspense fallback={<LoadingState />}>

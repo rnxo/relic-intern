@@ -241,7 +241,7 @@ export default function RegisterContent() {
 
                 {/* Dark base */}
                 <div className="absolute inset-0" style={{
-                    background: "radial-gradient(ellipse 160% 110% at 60% 115%, #07080f 0%, color-mix(in srgb, var(--lumi-base) 80%, #000) 50%, color-mix(in srgb, var(--lumi-sidebar) 90%, #000) 100%)"
+                    background: "radial-gradient(ellipse 160% 110% at 60% 115%, #07080f 0%, color-mix(in srgb, var(--lumi-base) 80%, #000) 50%, color-mix(in srgb, var(--lumi-base) 90%, #000) 100%)"
                 }} />
 
                 {/* Blue nebula — top-left */}
@@ -302,7 +302,7 @@ export default function RegisterContent() {
                         animate="visible"
                         className="flex-1 flex flex-col items-center justify-center px-8 py-12 md:py-10 relative overflow-hidden backdrop-blur-2xl"
                         style={{
-                            background: "linear-gradient(170deg, color-mix(in srgb, var(--lumi-base) 78%, transparent) 0%, color-mix(in srgb, var(--lumi-sidebar) 72%, transparent) 100%)",
+                            background: "linear-gradient(170deg, color-mix(in srgb, var(--lumi-base) 78%, transparent) 0%, color-mix(in srgb, var(--lumi-base) 72%, transparent) 100%)",
                             borderBottom: "1px solid color-mix(in srgb, var(--lumi-primary) 10%, transparent)",
                         }}
                     >
@@ -403,7 +403,7 @@ export default function RegisterContent() {
                         animate="visible"
                         className="flex-[1.2] flex flex-col justify-center px-8 py-10 backdrop-blur-2xl relative"
                         style={{
-                            background: "linear-gradient(160deg, color-mix(in srgb, var(--lumi-sidebar) 92%, transparent) 0%, color-mix(in srgb, var(--lumi-base) 88%, transparent) 100%)",
+                            background: "linear-gradient(160deg, color-mix(in srgb, var(--lumi-base) 92%, transparent) 0%, color-mix(in srgb, var(--lumi-base) 88%, transparent) 100%)",
                         }}
                     >
                         {/* Corner glow */}

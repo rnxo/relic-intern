@@ -56,7 +56,7 @@ export async function signup(
   redirect("/dashboard");
 }
 
-export async function singout() {
+export async function signout() {
   const supabase = await createClient();
   await supabase.auth.signOut();
   revalidatePath("/", "layout");

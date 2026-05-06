@@ -15,7 +15,7 @@ export default function PagesLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <div className="ml-20">
+        <div>
             <Sidebar/>
             { children }
         </div>
@@ -37,7 +37,7 @@ export function Sidebar() {
     };
 
     return (
-        <div className="fixed left-0 top-0 bottom-0 w-20 bg-[#16161e] border-r border-[#7aa2f7]/15 shadow-lg z-40">
+        <div className="fixed left-0 top-0 bottom-0 w-20 bg-lumi-base/50 border-r border-[#7aa2f7]/15 shadow-lg z-40">
             <div className="flex flex-col items-center h-full py-8">
                 {/* Logo */}
                 <div className="mb-12 text-center">

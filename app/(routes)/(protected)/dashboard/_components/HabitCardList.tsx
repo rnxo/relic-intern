@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { HabitGroup } from "./HabitGroup";
 import { redirect } from 'next/navigation'
-import { singout } from "@/app/auth/actions";
+import { signout } from "@/app/auth/actions";
 
 
 
@@ -20,7 +20,7 @@ export default function HabitCardList() {
     //signout function
     const handleSignOut = async (e: React.MouseEvent<HTMLElement>) => {
         e.preventDefault();
-        await singout();
+        await signout();
         console.log("user signout successed");
     }
 
