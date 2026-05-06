@@ -1,6 +1,6 @@
 'use client';
 
-import { useRouter, usePathname } from 'next/navigation';
+import { usePathname, redirect } from 'next/navigation';
 import { Home, CheckSquare, Leaf, Calendar } from 'lucide-react';
 import { motion } from 'motion/react';
 
@@ -24,7 +24,6 @@ export default function PagesLayout({
 }
 
 export function Sidebar() {
-    const router = useRouter();
     const pathname = usePathname();
 
     const activeTab = pathname.startsWith('/register-habit')
@@ -36,7 +35,7 @@ export function Sidebar() {
                 : 'dashboard';
 
     const handleTabClick = (href: string) => {
-        router.push(href);
+        redirect(href);
     };
 
     return (
