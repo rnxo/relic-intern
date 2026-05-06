@@ -10,7 +10,7 @@ export default function DashBoardPage() {
     return (
         <div className="flex w-full min-h-screen bg-[#1a1b26] transition-all duration-300">
             {/* Control Panel / Pet Section (Left) */}
-            <aside className="w-[450px] border-r border-[#414868]/30 overflow-y-auto hidden lg:block">
+            <aside className="w-112.5 border-r border-[#414868]/30 overflow-y-auto hidden lg:block">
                 <Suspense fallback={<LoadingState />}>
                     <div className="flex flex-col h-full bg-[#1a1b26]">
                         <PetView />
