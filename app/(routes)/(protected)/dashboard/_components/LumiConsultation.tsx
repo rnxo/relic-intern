@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "motion/react";
 import { Brain, Sparkles, MessageSquare, ChevronRight, Loader2 } from "lucide-react";
 import { usePet } from "@/app/hooks/petHooks";
-import { useHabits } from "@/app/hooks/habitHooks";
+import { useHabits } from "@/app/features/habit/habit.state";
 
 type Insight = {
     analysis: string;

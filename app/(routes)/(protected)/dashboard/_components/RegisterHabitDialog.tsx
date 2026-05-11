@@ -16,8 +16,8 @@ import { Field, FieldGroup } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, SelectGroup, SelectLabel } from "@/components/ui/select"
-import { Habit } from "@/app/types/habit"
-import { useHabits } from "@/app/hooks/habitHooks"
+import type { Habit } from "@/app/features/habit/habit.type";
+import { useHabits } from "@/app/features/habit/habit.state"
 import { useState } from "react";
 
 export default function RegisterHabitDialog({ habit }: { habit?: Habit }) {
@@ -25,7 +25,7 @@ export default function RegisterHabitDialog({ habit }: { habit?: Habit }) {
 
     // 初期値の管理：編集なら既存データ、新規ならデフォルト値
     const [formData, setFormData] = useState<Partial<Habit>>(
-        habit ?? { title: "", timeBlock: "morning", targetDays: "7", streakDays: 0, isCompleted: false }
+        habit ?? { title: "", time_block: "morning", target_days: "7", streak_days: 0, is_completed: false }
     );
 
     const handleUpdate = (key: keyof Habit, value: any) => {
@@ -75,15 +75,15 @@ export default function RegisterHabitDialog({ habit }: { habit?: Habit }) {
                         <Field>
                             <Label>タイムブロック</Label>
                             <TimeBlockSelector
-                                value={formData.timeBlock}
-                                onValueChange={(val) => handleUpdate("timeBlock", val)}
+                                value={formData.time_block}
+                                onValueChange={(val) => handleUpdate("time_block", val)}
                             />
                         </Field>
                         <Field>
                             <Label>目標日数</Label>
                             <TargetDaysSelector
-                                value={formData.targetDays}
-                                onValueChange={(val) => handleUpdate("targetDays", val)}
+                                value={formData.target_days}
+                                onValueChange={(val) => handleUpdate("target_days", val)}
                             />
                         </Field>
                     </FieldGroup>

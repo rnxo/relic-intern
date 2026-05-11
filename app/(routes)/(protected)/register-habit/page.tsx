@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useHabits } from "@/app/hooks/habitHooks";
-import { Habit } from "@/app/types/habit";
+import { useHabits } from "@/app/features/habit/habit.state";
+import { NewHabitInput } from "@/app/features/habit/habit.type";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -15,19 +15,27 @@ import { motion } from "motion/react";
 export default function RegisterHabitPage() {
     const router = useRouter();
     const { addNewHabit } = useHabits();
+    const [ input, setInput ] = useState<NewHabitInput>({
+        title: "",
+        time_block: "morning",
+        target_days: "7",
 
-    const [title, setTitle] = useState("");
-    const [timeBlock, setTimeBlock] = useState<Habit['timeBlock']>("morning");
-    const [streakDays, setStreakDays] = useState("7");
+    });
+
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleChange = (key: keyof NewHabitInput, value: string) => {
+        setInput((prev) => ({ ...prev, [key]: value}));
+    }
+
+    const handleSubmit = async (e: React.SubmitEvent) => {
         e.preventDefault();
-        if (!title.trim()) return;
+        if (!input.title.trim()) return;
 
         setIsSubmitting(true);
         try {
-            await addNewHabit({ title, timeBlock, streakDays });
+            await addNewHabit(input);
+            console.log("success to add habit", JSON.stringify(input));
             router.push("/dashboard");
         } catch (error) {
             console.error("Failed to add habit:", error);
@@ -77,8 +85,8 @@ export default function RegisterHabitPage() {
                                 <Input
                                     id="title"
                                     placeholder="例: 朝の読書、スクワット..."
-                                    value={title}
-                                    onChange={(e) => setTitle(e.target.value)}
+                                    value={input.title}
+                                    onChange={(e) => handleChange("title" ,e.target.value)}
                                     className="h-14 bg-[#1a1b26]/50 border-[#414868] rounded-2xl text-lg focus:ring-2 focus:ring-[#7aa2f7] transition-all placeholder:text-gray-600 text-white"
                                     required
                                 />
@@ -87,7 +95,7 @@ export default function RegisterHabitPage() {
                             {/* Time Block */}
                             <div className="space-y-3">
                                 <Label className="text-sm font-bold text-[#7aa2f7] uppercase tracking-wider ml-1">実行する時間帯</Label>
-                                <Select value={timeBlock} onValueChange={(val: any) => setTimeBlock(val)}>
+                                <Select value={input.time_block} onValueChange={(val) => handleChange("time_block", val)}>
                                     <SelectTrigger className="h-14 bg-[#1a1b26]/50 border-[#414868] rounded-2xl text-white focus:ring-2 focus:ring-[#7aa2f7] transition-all">
                                         <SelectValue placeholder="時間帯を選択" />
                                     </SelectTrigger>
@@ -111,13 +119,13 @@ export default function RegisterHabitPage() {
                                         <button
                                             key={day}
                                             type="button"
-                                            onClick={() => setStreakDays(day)}
-                                            className={`h-12 rounded-xl border font-bold transition-all flex items-center justify-center gap-2 ${streakDays === day
+                                            onClick={() => handleChange("target_days", day)}
+                                            className={`h-12 rounded-xl border font-bold transition-all flex items-center justify-center gap-2 ${input.target_days === day
                                                 ? "bg-[#7aa2f7] border-[#7aa2f7] text-white shadow-[0_0_15px_rgba(122,162,247,0.3)]"
                                                 : "bg-[#1a1b26]/30 border-[#414868] text-gray-400 hover:border-[#7aa2f7]/50"
                                                 }`}
                                         >
-                                            {streakDays === day && <Check size={16} />}
+                                            {input.target_days === day && <Check size={16} />}
                                             {day}日
                                         </button>
                                     ))}
@@ -132,7 +140,7 @@ export default function RegisterHabitPage() {
                             >
                                 <Button
                                     type="submit"
-                                    disabled={isSubmitting || !title.trim()}
+                                    disabled={isSubmitting || !input.title.trim()}
                                     className="w-full h-16 bg-[#7aa2f7] hover:bg-[#7dcfff] text-white font-black text-xl rounded-2xl shadow-xl shadow-[#7aa2f7]/10 flex items-center justify-center gap-3 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
                                     {isSubmitting ? (

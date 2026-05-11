@@ -1,6 +1,6 @@
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
 import { motion, AnimatePresence } from "motion/react";
-import { useHabits } from "@/app/hooks/habitHooks";
+import { useHabits } from "@/app/features/habit/habit.state";
 import { Habit } from "@/app/types/habit";
 import { useState, useEffect, useRef } from "react";
 import { PetSvg } from "./PetSvg";

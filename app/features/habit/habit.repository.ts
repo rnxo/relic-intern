@@ -1,0 +1,96 @@
+import type { Habit, NewHabitInput } from "./habit.type";
+import { createClient } from "@/app/lib/supabase/server";
+
+interface IHabitRepository {
+    getAll:() => Promise<Habit[]>;
+    getById: (id: string) => Promise<Habit>;
+    create: (input: NewHabitInput) => Promise<Habit>;
+    update: (id: string, input: Habit) => Promise<Habit>;
+    delete: (id: string) => void;
+}
+
+export const habitRepository: IHabitRepository = {
+    getAll: async () => {
+        const supabase = await createClient();
+        const { data: { user } } = await supabase.auth.getUser();
+
+        if(!user) throw new Error("unauthorized user is trying to get some secured data");
+
+        const { data, error } = await supabase
+            .from('habits')
+            .select('*')
+            .eq('user_id', user.id);
+        
+        if(error) throw new Error(error.message);
+        return data as Habit[];
+    },
+    getById: async (id: string) => {
+        const supabase = await createClient();
+        const { data: { user } } = await supabase.auth.getUser();
+
+        if(!user) throw new Error("Unautorized");
+
+        const { data, error } = await supabase
+            .from('habits')
+            .select('*')
+            .eq('user_id', user.id)
+            .eq('id', id)
+            .single()
+        
+        if(error) throw new Error(error.message);
+
+        return data as Habit;
+    },
+    create: async (input: NewHabitInput) => {
+        const supabase = await createClient();
+        const { data: { user } } = await supabase.auth.getUser();
+
+        if(!user) throw new Error("Unauthorized");
+
+        const { data, error } = await supabase
+            .from('habits')
+            .insert({
+                user_id: user.id,
+                title: input.title,
+                time_block: input.time_block,
+                target_days: input.target_days,
+            })
+            .select()
+            .single();
+        
+        if(error) throw new Error(error.message);
+        return data as Habit;
+    },
+    update: async (id: string, input: Habit) => {
+        const supabase = await createClient();
+        const { data: { user } } = await supabase.auth.getUser();
+
+        if(!user) throw new Error("Unauthorized");
+
+
+        const { data, error } = await supabase
+            .from('habits')
+            .update(input)
+            .eq('id', id)
+            .eq('user_id', user.id)
+            .select()
+            .single();
+        
+        if (error) throw new Error(error.message);
+        return data as Habit;
+    },
+    delete: async (id: string) => {
+        const supabase = await createClient();
+        const { data: { user } } = await supabase.auth.getUser();
+
+        if(!user) throw new Error("Unauthorized");
+
+        const { error } = await supabase
+            .from('habits')
+            .delete()
+            .eq('id', id)
+            .eq('user_id', user.id);
+
+        if(error) throw new Error(error.message);
+    },
+}

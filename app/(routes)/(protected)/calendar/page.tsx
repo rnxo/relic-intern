@@ -2,12 +2,11 @@
 
 import { useState, Suspense } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { useAtomValue } from 'jotai';
-import { habitsAtom } from '@/app/store/habitAtom';
+import { useHabits } from '@/app/features/habit/habit.state';
 import MonthView from './_components/MonthView';
 
 function CalendarContent() {
-    const habits = useAtomValue(habitsAtom);
+    const { habits } = useHabits();
     const today = new Date();
     const [year, setYear] = useState(today.getFullYear());
     const [month, setMonth] = useState(today.getMonth());

@@ -1,4 +1,4 @@
-import { useHabits } from "@/app/hooks/habitHooks";
+import { useHabits } from "@/app/features/habit/habit.state";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -10,12 +10,12 @@ import { signout } from "@/app/auth/actions";
 
 
 export default function HabitCardList() {
-    const { habits } = useHabits(); // 読み込みは一回だけにする今後直す byフェル
-    
-    const morningHabits = habits?.filter(h => h.timeBlock === 'morning') || [];
-    const daytimeHabits = habits?.filter(h => h.timeBlock === 'daytime') || [];
-    const nightHabits = habits?.filter(h => h.timeBlock === 'night') || [];
-    const midnightHabits = habits?.filter(h => h.timeBlock === 'midnight') || [];
+    const { habits } = useHabits(); // 読み込みは一回だけにする今後直す by skyremt
+
+    const morningHabits = habits?.filter(h => h.time_block === 'morning') || [];
+    const daytimeHabits = habits?.filter(h => h.time_block === 'daytime') || [];
+    const nightHabits = habits?.filter(h => h.time_block === 'night') || [];
+    const midnightHabits = habits?.filter(h => h.time_block === 'midnight') || [];
 
     //signout function
     const handleSignOut = async (e: React.MouseEvent<HTMLElement>) => {

@@ -1,6 +1,6 @@
 "use client";
 
-import { Habit } from "@/app/types/habit"
+import { Habit } from "@/app/features/habit/habit.type";
 import { HabitItem } from "./HabitItem";
 import { useState, useEffect } from "react";
 import { ChevronDown } from "lucide-react";
