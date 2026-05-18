@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo } from 'react';
-import { Habit } from '@/app/types/habit';
+import type { Habit } from '@/app/features/habit/habit.type';
 
 interface MonthViewProps {
     year: number;
@@ -21,7 +21,7 @@ export default function MonthView({ year, month, habits }: MonthViewProps) {
     const completionMap = useMemo(() => {
         const map: Record<string, { completed: number; total: number }> = {};
         for (const habit of habits) {
-            const dateKey = habit.completedAt?.split('T')[0];
+            const dateKey = habit.completed_at?.split('T')[0];
             if (dateKey) {
                 if (!map[dateKey]) map[dateKey] = { completed: 0, total: 0 };
                 map[dateKey].completed += 1;
