@@ -1,11 +1,13 @@
-import type { Habit, NewHabitInput } from "./habit.type";
+import type { Habit, NewHabitInput, UpdateHabitInput } from "./habit.type";
 import { createClient } from "@/app/lib/supabase/server";
+
+
 
 interface IHabitRepository {
     getAll:() => Promise<Habit[]>;
     getById: (id: string) => Promise<Habit>;
     create: (input: NewHabitInput) => Promise<Habit>;
-    update: (id: string, input: Habit) => Promise<Habit>;
+    update: (id: string, input: UpdateHabitInput) => Promise<Habit>;
     delete: (id: string) => void;
 }
 
@@ -39,7 +41,7 @@ export const habitRepository: IHabitRepository = {
         
         if(error) throw new Error(error.message);
 
-        return data as Habit;
+        return data as Habit
     },
     create: async (input: NewHabitInput) => {
         const supabase = await createClient();
@@ -61,7 +63,7 @@ export const habitRepository: IHabitRepository = {
         if(error) throw new Error(error.message);
         return data as Habit;
     },
-    update: async (id: string, input: Habit) => {
+    update: async (id: string, input: UpdateHabitInput) => {
         const supabase = await createClient();
         const { data: { user } } = await supabase.auth.getUser();
 

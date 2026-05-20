@@ -86,13 +86,9 @@ export type PetGrowthStatus = {
 
 }
 
-export function calculateExpression(trust: number, exhaustion: number): 'happy' | 'sad' | 'angry' | 'neutral' {
+export function calculateExpression(trust: number, exhaustion: number): 'joy' | 'neutral' {
     if (trust >= 65 && exhaustion <= 30) {
-        return "happy";
-    } else if (trust <= 50 && exhaustion <= 50) {
-        return "sad";
-    } else if (trust <= 30 && exhaustion <= 65) {
-        return "angry";
+        return "joy";
     }
     return "neutral";
 }

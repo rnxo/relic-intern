@@ -21,14 +21,14 @@ import { useHabits } from "@/app/features/habit/habit.state"
 import { useState } from "react";
 
 export default function RegisterHabitDialog({ habit }: { habit?: Habit }) {
-    const { addNewHabit, updateHabit } = useHabits();
+    const { updateHabit } = useHabits();
 
     // 初期値の管理：編集なら既存データ、新規ならデフォルト値
     const [formData, setFormData] = useState<Partial<Habit>>(
         habit ?? { title: "", time_block: "morning", target_days: "7", streak_days: 0, is_completed: false }
     );
 
-    const handleUpdate = (key: keyof Habit, value: any) => {
+    const handleUpdate = (key: keyof Habit, value: string) => {
         setFormData(prev => ({ ...prev, [key]: value }));
     };
 
@@ -36,9 +36,6 @@ export default function RegisterHabitDialog({ habit }: { habit?: Habit }) {
         e.preventDefault();
         if (habit?.id) {
             await updateHabit(habit.id, formData); // 編集保存
-        } else {
-            // 新規保存
-            await addNewHabit(formData);
         }
     };
 
