@@ -1,9 +1,11 @@
+import { useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { motion, AnimatePresence } from "motion/react";
 import { useHabits } from "@/app/features/habit/habit.state";
 import { Habit } from "@/app/features/habit/habit.type";
 import { PetSvg } from "./PetSvg";
-import { usePet } from "@/app/features/pet/pet.state";
+import { usePet, initPetAtom } from "@/app/features/pet/pet.state";
+import { useSetAtom } from "jotai";
 import { Award } from "lucide-react";
 import { PetEmotionStatusCard } from "./PetEmotionStatusCard";
 
@@ -15,6 +17,11 @@ import { PetEmotionStatusCard } from "./PetEmotionStatusCard";
 export default function PetView() {
   const { habits } = useHabits();
   const { pet } = usePet();
+  const initPet = useSetAtom(initPetAtom);
+
+  useEffect(() => {
+    initPet();
+  }, []);
 
   const todayTotalCompletedHabits: Habit[] =
     habits?.filter((h) => h.is_completed) || [];
@@ -84,7 +91,7 @@ export default function PetView() {
         </Card>
       </motion.div>
       {/*Lumi感情ステータスブロック*/}
-      <PetEmotionStatusCard pet={pet} />
+      {pet && <PetEmotionStatusCard pet={pet} />}
       {/* <motion.div
         initial={{ opacity: 0, x: 20 }}
         animate={{ opacity: 1, x: 0 }}

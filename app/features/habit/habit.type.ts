@@ -6,6 +6,8 @@ export type Habit = {
     target_days: string;
     streak_days: number;
     is_completed: boolean;
+    type?: string;
+    heaviness?: string;
     completed_at: string;
     created_at: string;
     updated_at: string;

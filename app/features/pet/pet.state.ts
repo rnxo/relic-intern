@@ -1,30 +1,30 @@
 import { atom, useAtom } from "jotai";
 import { Pet } from "./pet.type";
 
-const res = await fetch('api/pet');
-const initPetData: Pet= await res.json();
-const petAtom = atom<Pet>(initPetData);
+export const petAtom = atom<Pet | null>(null);
+
+export const initPetAtom = atom(null, async (_get, set) => {
+    const res = await fetch("/api/pet");
+    if (!res.ok) return;
+    const data = await res.json();
+    set(petAtom, data);
+});
 
 export const usePet = () => {
-    const [ pet, setPet ] = useAtom<Pet>(petAtom);
-    
-    // useEffect(() => {
-    //     fetch('api\pet')
-    //         .then(res => res.json())
-    //         .then(setPet)
-    // },[]);
+    const [pet, setPet] = useAtom<Pet | null>(petAtom);
 
     const updatePet = async (input: Pet) => {
-        const res = await fetch('api/pet', {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json'},
+        const res = await fetch("/api/pet", {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify(input),
         });
 
-        if(!res.ok) throw new Error("ERROR: failed to upadate pet data");
+        if (!res.ok) throw new Error("ERROR: failed to update pet data");
 
-        const updatedPet = await res.json();
-        setPet(updatedPet);
-    }
-    return { pet, updatePet};
-}
+        const { data } = await res.json();
+        setPet(data);
+    };
+
+    return { pet, updatePet };
+};
