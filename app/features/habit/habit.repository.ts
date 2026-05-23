@@ -56,6 +56,9 @@ export const habitRepository: IHabitRepository = {
                 title: input.title,
                 time_block: input.time_block,
                 target_days: input.target_days,
+                type: input.type,
+                duration: input.duration,
+                heaviness: input.heaviness,
             })
             .select()
             .single();

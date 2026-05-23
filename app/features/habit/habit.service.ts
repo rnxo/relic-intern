@@ -9,6 +9,7 @@
 import { habitRepository } from "./habit.repository";
 import type { Habit, NewHabitInput, UpdateHabitInput } from "./habit.type";
 
+//今後バリデーションを追加する
 export const habitService = {
   getAll: async () => await habitRepository.getAll(),
   getById: async (id: string) => await habitRepository.getById(id),

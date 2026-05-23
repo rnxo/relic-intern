@@ -26,6 +26,8 @@ export const useHabits = () => {
       body: JSON.stringify(input),
     });
 
+    console.log("addNewHabit: ", JSON.stringify(input, null, 2));
+
     if (!res.ok) {
       console.log(res);
       throw new Error("ERROR: failed to add a new habit");

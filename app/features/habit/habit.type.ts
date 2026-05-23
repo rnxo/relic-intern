@@ -6,6 +6,7 @@ export type Habit = {
     target_days: string;
     streak_days: number;
     is_completed: boolean;
+    duration?: string;
     type?: string;
     heaviness?: string;
     completed_at: string;
@@ -13,7 +14,7 @@ export type Habit = {
     updated_at: string;
 }
 
-export type NewHabitInput = Pick<Habit, 'title' | 'time_block' | 'target_days'>
+export type NewHabitInput = Pick<Habit, 'title' | 'time_block' | 'target_days' | 'type' | 'heaviness' | 'duration'>
 export type UpdateHabitInput = Partial<Omit<Habit, 'id' | 'user_id' | 'created_at'>>
 /*
 To: simaao

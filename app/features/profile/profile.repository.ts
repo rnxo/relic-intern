@@ -31,7 +31,6 @@ export const profileRepository: IProfileRepository = {
   get: async () => {
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
-    console.log(JSON.stringify(user, null, 2));
 
     if (!user) throw new Error("Unauthorized");
 
