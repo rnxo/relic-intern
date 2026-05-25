@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { Suspense, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useHabits } from "@/app/features/habit/habit.state";
 import { NewHabitInput } from "@/app/features/habit/habit.type";
 import { Button } from "@/components/ui/button";
@@ -15,21 +15,38 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
-import { ChevronLeft, Plus, Check } from "lucide-react";
+import { ChevronLeft, Pencil, Plus, Check } from "lucide-react";
 import { motion } from "motion/react";
 import { HabitTypeCardList } from "./_components/HabitTypeCardList";
 import { DurationSelectorFiled } from "./_components/DurationSelectorField";
 
-export default function RegisterHabitPage() {
+function RegisterHabitContent() {
   const router = useRouter();
-  const { addNewHabit } = useHabits();
-  const [input, setInput] = useState<NewHabitInput>({
-    title: "",
-    duration: "90",
-    time_block: "morning",
-    target_days: "7",
-    type: "運動",
-  });
+  const searchParams = useSearchParams();
+  const habitId = searchParams.get("habitId");
+
+  const { habits, addNewHabit, updateHabit } = useHabits();
+  const editingHabit = habitId ? habits.find((h) => h.id === habitId) : undefined;
+  const isEditMode = !!editingHabit;
+
+  const [input, setInput] = useState<NewHabitInput>(() =>
+    editingHabit
+      ? {
+          title: editingHabit.title,
+          duration: editingHabit.duration ?? "90",
+          time_block: editingHabit.time_block,
+          target_days: editingHabit.target_days,
+          type: editingHabit.type ?? "運動",
+          heaviness: editingHabit.heaviness,
+        }
+      : {
+          title: "",
+          duration: "90",
+          time_block: "morning",
+          target_days: "7",
+          type: "運動",
+        }
+  );
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -37,17 +54,20 @@ export default function RegisterHabitPage() {
     setInput((prev) => ({ ...prev, [key]: value }));
   };
 
-  const handleSubmit = async (e: React.SubmitEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.title.trim()) return;
 
     setIsSubmitting(true);
     try {
-      await addNewHabit(input);
+      if (isEditMode && habitId) {
+        await updateHabit(habitId, input);
+      } else {
+        await addNewHabit(input);
+      }
       router.push("/dashboard");
-      console.log("success to add habit", JSON.stringify(input));
     } catch (error) {
-      console.error("Failed to add habit:", error);
+      console.error("Failed to save habit:", error);
     } finally {
       setIsSubmitting(false);
     }
@@ -72,10 +92,12 @@ export default function RegisterHabitPage() {
 
         <div className="space-y-2">
           <h1 className="text-4xl font-extrabold tracking-tight">
-            新しい習慣を始める
+            {isEditMode ? "習慣を編集する" : "新しい習慣を始める"}
           </h1>
           <p className="text-gray-400">
-            一歩ずつ、確実に。あなたの成長をLumiと一緒に記録しましょう。
+            {isEditMode
+              ? "内容を変更してLumiと一緒に続けましょう。"
+              : "一歩ずつ、確実に。あなたの成長をLumiと一緒に記録しましょう。"}
           </p>
         </div>
 
@@ -83,9 +105,14 @@ export default function RegisterHabitPage() {
           <CardHeader className="border-b border-[#414868]/30 pb-8">
             <CardTitle className="text-2xl font-bold flex items-center gap-3">
               <div className="p-3 bg-[#7aa2f7]/20 rounded-2xl">
-                <Plus className="text-[#7aa2f7]" size={24} />
+                {isEditMode
+                  ? <Pencil className="text-[#7aa2f7]" size={24} />
+                  : <Plus className="text-[#7aa2f7]" size={24} />
+                }
               </div>
-              <span className="text-[#9aa5ce]">習慣の設定</span>
+              <span className="text-[#9aa5ce]">
+                {isEditMode ? "習慣の編集" : "習慣の設定"}
+              </span>
             </CardTitle>
             <CardDescription className="text-gray-400">
               習慣の名前とタイミングを決めてください。
@@ -186,7 +213,7 @@ export default function RegisterHabitPage() {
                   ) : (
                     <>
                       <Check size={24} />
-                      <span>習慣を登録する</span>
+                      <span>{isEditMode ? "変更を保存する" : "習慣を登録する"}</span>
                     </>
                   )}
                 </Button>
@@ -196,5 +223,13 @@ export default function RegisterHabitPage() {
         </Card>
       </motion.div>
     </div>
+  );
+}
+
+export default function RegisterHabitPage() {
+  return (
+    <Suspense>
+      <RegisterHabitContent />
+    </Suspense>
   );
 }

@@ -17,9 +17,10 @@ export function DurationSelectorFiled({ value, onChange }: DurationSelectorFiled
   return (
     <div className="flex items-center justify-between">
       {DURATION_PRESETS.map((opt) => (
-        <SelectCard 
-          key={opt} 
-          className="border-2 hover:border-lumi-primary" 
+        <SelectCard
+          key={opt}
+          type="button"
+          className="border-2 hover:border-lumi-primary"
           isSelected={value === opt}
           onClick={() => onChange(opt)}>
           <div className="flex flex-col justify-center items-center">
