@@ -2,6 +2,7 @@ import { atom, useAtom, useAtomValue, useSetAtom } from "jotai";
 import { Habit, NewHabitInput } from "./habit.type";
 import { updatePetStatsAtom } from "@/app/store/emotionAtom";
 import { testTimeAtom } from "@/app/store/testTimeAtom";
+import { petAtom } from "@/app/features/pet/pet.state";
 import {
   calculateBlockPoints,
   TimeBlock,
@@ -18,6 +19,7 @@ export const useHabits = () => {
   const [habits, setHabits] = useAtom(habitsAtom);
   const testHour = useAtomValue(testTimeAtom);
   const setPetStats = useSetAtom(updatePetStatsAtom);
+  const setPet = useSetAtom(petAtom);
 
   const addNewHabit = async (input: NewHabitInput) => {
     const res = await fetch("/api/habit", {
@@ -80,6 +82,14 @@ export const useHabits = () => {
       setHabits((prev) =>
         prev.map((habit) => (habit.id === id ? data : habit)),
       );
+
+      // 完了時のみ joy を一時的にセット、3秒後に normal へ戻す
+      if (isCompletedFlag) {
+        setPet((prev) => prev ? { ...prev, expression: "joy" } : prev);
+        setTimeout(() => {
+          setPet((prev) => prev ? { ...prev, expression: "normal" } : prev);
+        }, 3000);
+      }
     } catch (error) {
       return NextResponse.json({ message: error });
     }

@@ -17,7 +17,7 @@ export type Pet = {
     intimate_level: number;
     trust: number;
     exhaustion: number;
-    expression: 'joy' | 'neutral';
+    expression: 'joy' | 'normal' | 'sad';
     updated_at?: string;
     created_at?: string;
 }
