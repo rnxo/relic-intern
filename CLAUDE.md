@@ -51,6 +51,19 @@ npm run lint     # ESLint実行
 ### データフロー
 習慣完了 → `completedHabitAtom` → `petCalculations`で信頼度/疲労度を計算 → `updatePetStatsAtom` → PUT `/api/pet` → Supabase
 
+## Implementation Documentation Rules
+
+実装時は必ず以下の内容を記述したMDファイルを作成すること。
+
+**記載内容:**
+- 変更を加えたファイル名
+- 新規作成したファイル名
+- 新規変数の説明
+- 既存ファイルへの追加コード
+- ファイルごとに追記したコードが何をしているかの説明
+
+**保存場所:** `/Users/shimadaaoi/Lumi/`（lumi-projectの親ディレクトリ）
+
 ## Key Conventions
 
 - パスエイリアス: `@/*` → プロジェクトルート

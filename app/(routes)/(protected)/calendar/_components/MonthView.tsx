@@ -9,27 +9,7 @@ interface MonthViewProps {
     habits: Habit[];
 }
 
-function getEmojiForDay(completedCount: number, totalCount: number): string | null {
-    if (completedCount === 0) return null;
-    const ratio = completedCount / Math.max(totalCount, 1);
-    if (ratio >= 1) return '🤩';
-    if (ratio >= 0.5) return '😊';
-    return '😐';
-}
-
 export default function MonthView({ year, month, habits }: MonthViewProps) {
-    const completionMap = useMemo(() => {
-        const map: Record<string, { completed: number; total: number }> = {};
-        for (const habit of habits) {
-            const dateKey = habit.completed_at?.split('T')[0];
-            if (dateKey) {
-                if (!map[dateKey]) map[dateKey] = { completed: 0, total: 0 };
-                map[dateKey].completed += 1;
-            }
-        }
-        return map;
-    }, [habits]);
-
     const today = new Date();
     const todayStr = today.toISOString().split('T')[0];
 
@@ -78,9 +58,49 @@ export default function MonthView({ year, month, habits }: MonthViewProps) {
 
     const dayLabels = ['日', '月', '火', '水', '木', '金', '土'];
 
+    // 習慣ごとの表示期間を計算（created_at〜created_at + target_days - 1日）
+    const habitRanges = useMemo(() =>
+        habits.map(h => {
+            const start = h.created_at.split('T')[0];
+            const startDate = new Date(start);
+            const endDate = new Date(startDate);
+            endDate.setDate(endDate.getDate() + parseInt(h.target_days) - 1);
+            return {
+                habit: h,
+                start,
+                end: endDate.toISOString().split('T')[0],
+            };
+        }),
+        [habits]
+    );
+
+    // その週と重なる習慣を、何列目〜何列目に描画するか付きで返す
+    function getWeekHabits(week: typeof cells) {
+        const weekStart = week[0].dateStr;
+        const weekEnd = week[6].dateStr;
+
+        return habitRanges
+            .filter(({ start, end }) => start <= weekEnd && end >= weekStart)
+            .map(({ habit, start, end }) => {
+                let startCol = 1;
+                let endCol = 7;
+
+                for (let i = 0; i < 7; i++) {
+                    if (week[i].dateStr < start) startCol = i + 2;
+                    else break;
+                }
+                for (let i = 6; i >= 0; i--) {
+                    if (week[i].dateStr > end) endCol = i;
+                    else break;
+                }
+
+                return { habit, startCol, endCol };
+            });
+    }
+
     return (
         <div className="w-full rounded-2xl border border-[#414868]/40 overflow-hidden">
-            {/* Day headers */}
+            {/* 曜日ヘッダー */}
             <div className="grid grid-cols-7 border-b border-[#414868]/40">
                 {dayLabels.map((label, i) => (
                     <div
@@ -92,39 +112,56 @@ export default function MonthView({ year, month, habits }: MonthViewProps) {
                 ))}
             </div>
 
-            {/* Calendar grid */}
-            {weeks.map((week, wi) => (
-                <div key={wi} className="grid grid-cols-7">
-                    {week.map((cell, di) => {
-                        const isToday = cell.dateStr === todayStr;
-                        const stat = completionMap[cell.dateStr];
-                        const emoji = stat ? getEmojiForDay(stat.completed, habits.length) : null;
+            {/* 週ごとの行 */}
+            {weeks.map((week, wi) => {
+                const weekHabits = getWeekHabits(week);
+                return (
+                    <div key={wi} className={`border-b border-[#414868]/30 ${wi === weeks.length - 1 ? 'border-b-0' : ''}`}>
+                        {/* 日付数字 */}
+                        <div className="grid grid-cols-7">
+                            {week.map((cell, di) => {
+                                const isToday = cell.dateStr === todayStr;
+                                return (
+                                    <div
+                                        key={cell.dateStr}
+                                        className={`p-2 border-r border-[#414868]/30 last:border-r-0 ${!cell.currentMonth ? 'opacity-30' : ''}`}
+                                    >
+                                        <span
+                                            className={`text-sm font-semibold w-7 h-7 flex items-center justify-center rounded-full ${
+                                                isToday
+                                                    ? 'bg-[#7aa2f7] text-white'
+                                                    : di === 0
+                                                    ? 'text-red-400'
+                                                    : di === 6
+                                                    ? 'text-blue-400'
+                                                    : 'text-[#c0caf5]'
+                                            }`}
+                                        >
+                                            {cell.day}
+                                        </span>
+                                    </div>
+                                );
+                            })}
+                        </div>
 
-                        return (
-                            <div
-                                key={cell.dateStr}
-                                className={`min-h-24 p-2 border-b border-r border-[#414868]/30 flex flex-col ${!cell.currentMonth ? 'opacity-30' : ''} ${wi === weeks.length - 1 ? 'border-b-0' : ''} ${di === 6 ? 'border-r-0' : ''}`}
-                            >
-                                <span
-                                    className={`text-sm font-semibold w-7 h-7 flex items-center justify-center rounded-full ${isToday
-                                        ? 'bg-[#7aa2f7] text-white'
-                                        : di === 0
-                                            ? 'text-red-400'
-                                            : di === 6
-                                                ? 'text-blue-400'
-                                                : 'text-[#c0caf5]'
-                                        }`}
+                        {/* 習慣バー */}
+                        <div className={`grid grid-cols-7 gap-y-1 px-1 ${weekHabits.length > 0 ? 'pb-2' : 'h-8'}`}>
+                            {weekHabits.map(({ habit, startCol, endCol }) => (
+                                <div
+                                    key={habit.id}
+                                    style={{
+                                        gridColumnStart: startCol,
+                                        gridColumnEnd: endCol + 1,
+                                    }}
+                                    className="bg-emerald-500/80 rounded px-2 py-0.5 text-white text-xs font-medium truncate"
                                 >
-                                    {cell.day}
-                                </span>
-                                {emoji && (
-                                    <span className="mt-auto text-xl self-end pr-1 pb-1">{emoji}</span>
-                                )}
-                            </div>
-                        );
-                    })}
-                </div>
-            ))}
+                                    {habit.title}
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                );
+            })}
         </div>
     );
 }
