@@ -57,6 +57,11 @@
   --color-lumi-pet-owl:        var(--lumi-pet-owl);
   --color-lumi-pet-lumi:       var(--lumi-pet-lumi);
   --color-lumi-chart-inactive: var(--lumi-chart-inactive);
+  --color-lumi-chart-exercise: var(--lumi-chart-exercise);
+  --color-lumi-chart-study:    var(--lumi-chart-study);
+  --color-lumi-chart-food:     var(--lumi-chart-food);
+  --color-lumi-chart-sleep:    var(--lumi-chart-sleep);
+  --color-lumi-chart-other:    var(--lumi-chart-other);
 }
 
 /* ライトモード */

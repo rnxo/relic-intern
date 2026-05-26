@@ -50,7 +50,7 @@ function CalendarContent() {
 
                 {/* 右カラム: 円グラフ */}
                 <div className="w-72 flex-shrink-0">
-                    <TaskTypePieChart />
+                    <TaskTypePieChart habits={habits} />
                 </div>
             </div>
         </div>
