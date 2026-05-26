@@ -40,8 +40,7 @@ export async function signup(
   if (data.user) {
     const { error: petError } =  await supabase.from("pet").insert({
       user_id: data.user.id,
-      level: 1,
-      emotion: 0,
+      intimate_level: 1,
       trust: 0,
       exhaustion: 0,
       expression: "neutral",

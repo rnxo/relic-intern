@@ -1,8 +1,3 @@
-/* 
-    完了ボタンクリック時の処理
-
-*/
-
 /* TO: shimaao HabitRepositoryのメソッドトリセツです。
     getAll() -> 全habitデータを取得
     getById() -> 一致するidのhabitデータを取得
@@ -12,8 +7,9 @@
 */
 
 import { habitRepository } from "./habit.repository";
-import type { Habit, NewHabitInput } from "./habit.type";
+import type { Habit, NewHabitInput, UpdateHabitInput } from "./habit.type";
 
+//今後バリデーションを追加する
 export const habitService = {
   getAll: async () => await habitRepository.getAll(),
   getById: async (id: string) => await habitRepository.getById(id),
@@ -23,7 +19,8 @@ export const habitService = {
   delete: async (id: string) => await habitRepository.delete(id),
 
   complete: async (id: string) => {
-    const targetHabit = await habitRepository.getById(id);
+    try {
+          const targetHabit = await habitRepository.getById(id);
     const now = new Date();
     const todayStr = now.toISOString().split("T")[0];
     const isCompleting = !targetHabit.is_completed;
@@ -48,14 +45,16 @@ export const habitService = {
       }
     }
 
-    const completedHabit = {
-      ...targetHabit,
+    const completedHabit: UpdateHabitInput = {
       is_completed: isCompleting,
       completed_at: isCompleting ? now.toISOString() : targetHabit.completed_at,
       streak_days: newStreakDays,
       updated_at: now.toISOString(),
     };
 
-    return await habitRepository.update(id, completedHabit);
+    return await habitRepository.update(id ,completedHabit)
+    } catch (error) {
+      throw new Error(`habit.service complete: ${error}`)
+    }
   },
 };

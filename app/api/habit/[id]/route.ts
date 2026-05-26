@@ -30,6 +30,20 @@ export async function PUT(
 
 }
 
+export async function PATCH(
+    req: NextRequest,
+    { params }: { params: Promise<{ id: string }> }
+) {
+  const { id } = await params;
+  try {
+    const data = await habitService.complete(id);
+    return NextResponse.json({ message: "success to patch habit data", data });
+  } catch (error) {
+    return NextResponse.json({ message: error instanceof Error ? error.message : String(error) }, { status: 500 });
+  }
+}
+
+
 // export async function PUT(
 //     req: NextRequest,
 //     { params }: { params: Promise<{ id: string }> }

@@ -1,7 +1,7 @@
 "use client";
 
 import { Suspense } from "react";
-import HabitCardList from "./_components/HabitCardList";
+import HabitCardList from "./_components/habit_components/HabitCardList";
 import PetView from "./_components/PetView";
 import LumiConsultation from "./_components/LumiConsultation";
 import { Loader2 } from "lucide-react";

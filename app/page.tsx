@@ -1,21 +1,22 @@
-import { createClient } from "@/app/lib/supabase/server";
+"use client";
+
+import { useEffect } from "react";
 import Link from "next/link";
-import { redirect } from "next/navigation";
+import { useSetAtom } from "jotai";
+import { useProfile, initProfileAtom } from "./features/profile/profile.state";
 
-export default async function DashboardPage() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+export default function WelcomePage() {
+  const { profile } = useProfile();
+  const initProfile = useSetAtom(initProfileAtom);
 
-  if (!user) {
-    redirect("/register");
-  }
+  useEffect(() => {
+    initProfile();
+  }, []);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-lumi-base">
       <h1 className="text-2xl font-bold text-lumi-primary">
-        ようこそ、{user.user_metadata.user_name}さん
+        ようこそ、{profile?.userName}
       </h1>
       <Link className="text-lumi-primary hover:underline" href={"/dashboard"}>
         メールの承認をしてLumiを始めよう!!
