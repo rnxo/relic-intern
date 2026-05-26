@@ -5,6 +5,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useHabits } from '@/app/features/habit/habit.state';
 import MonthView from './_components/MonthView';
 import TaskTypePieChart from './_components/TaskTypePieChart';
+import TodayCompletedTasks from './_components/TodayCompletedTasks';
 
 function CalendarContent() {
     const { habits } = useHabits();
@@ -48,9 +49,10 @@ function CalendarContent() {
                     <MonthView year={year} month={month} habits={habits} className="flex-1" />
                 </div>
 
-                {/* 右カラム: 円グラフ */}
-                <div className="w-72 flex-shrink-0">
+                {/* 右カラム: 円グラフ + 達成済タスク */}
+                <div className="w-72 flex-shrink-0 flex flex-col gap-4 overflow-y-auto max-h-full">
                     <TaskTypePieChart habits={habits} />
+                    <TodayCompletedTasks habits={habits} />
                 </div>
             </div>
         </div>
