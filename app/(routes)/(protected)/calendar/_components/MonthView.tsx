@@ -7,9 +7,10 @@ interface MonthViewProps {
     year: number;
     month: number;
     habits: Habit[];
+    className?: string;
 }
 
-export default function MonthView({ year, month, habits }: MonthViewProps) {
+export default function MonthView({ year, month, habits, className = '' }: MonthViewProps) {
     const today = new Date();
     const todayStr = today.toISOString().split('T')[0];
 
@@ -99,13 +100,13 @@ export default function MonthView({ year, month, habits }: MonthViewProps) {
     }
 
     return (
-        <div className="w-full rounded-2xl border border-[#414868]/40 overflow-hidden">
+        <div className={`w-full rounded-2xl border border-lumi-border/40 overflow-hidden flex flex-col ${className}`}>
             {/* 曜日ヘッダー */}
-            <div className="grid grid-cols-7 border-b border-[#414868]/40">
+            <div className="grid grid-cols-7 border-b border-lumi-border/40 flex-shrink-0">
                 {dayLabels.map((label, i) => (
                     <div
                         key={label}
-                        className={`py-3 text-center text-sm font-medium ${i === 0 ? 'text-red-400' : i === 6 ? 'text-blue-400' : 'text-[#9aa5ce]'}`}
+                        className={`py-3 text-center text-sm font-medium ${i === 0 ? 'text-red-400' : i === 6 ? 'text-blue-400' : 'text-lumi-muted'}`}
                     >
                         {label}
                     </div>
@@ -116,7 +117,7 @@ export default function MonthView({ year, month, habits }: MonthViewProps) {
             {weeks.map((week, wi) => {
                 const weekHabits = getWeekHabits(week);
                 return (
-                    <div key={wi} className={`border-b border-[#414868]/30 ${wi === weeks.length - 1 ? 'border-b-0' : ''}`}>
+                    <div key={wi} className={`flex flex-col flex-1 border-b border-lumi-border/30 ${wi === weeks.length - 1 ? 'border-b-0' : ''}`}>
                         {/* 日付数字 */}
                         <div className="grid grid-cols-7">
                             {week.map((cell, di) => {
@@ -124,17 +125,17 @@ export default function MonthView({ year, month, habits }: MonthViewProps) {
                                 return (
                                     <div
                                         key={cell.dateStr}
-                                        className={`p-2 border-r border-[#414868]/30 last:border-r-0 ${!cell.currentMonth ? 'opacity-30' : ''}`}
+                                        className={`p-2 border-r border-lumi-border/30 last:border-r-0 ${!cell.currentMonth ? 'opacity-30' : ''}`}
                                     >
                                         <span
                                             className={`text-sm font-semibold w-7 h-7 flex items-center justify-center rounded-full ${
                                                 isToday
-                                                    ? 'bg-[#7aa2f7] text-white'
+                                                    ? 'bg-lumi-primary text-white'
                                                     : di === 0
                                                     ? 'text-red-400'
                                                     : di === 6
                                                     ? 'text-blue-400'
-                                                    : 'text-[#c0caf5]'
+                                                    : 'text-lumi-fg'
                                             }`}
                                         >
                                             {cell.day}
@@ -145,7 +146,7 @@ export default function MonthView({ year, month, habits }: MonthViewProps) {
                         </div>
 
                         {/* 習慣バー */}
-                        <div className={`grid grid-cols-7 gap-y-1 px-1 ${weekHabits.length > 0 ? 'pb-2' : 'h-8'}`}>
+                        <div className={`grid grid-cols-7 gap-y-0.5 px-0.5 pt-0.5 items-start content-start flex-1 ${weekHabits.length > 0 ? 'pb-1' : ''}`}>
                             {weekHabits.map(({ habit, startCol, endCol }) => (
                                 <div
                                     key={habit.id}
@@ -153,7 +154,7 @@ export default function MonthView({ year, month, habits }: MonthViewProps) {
                                         gridColumnStart: startCol,
                                         gridColumnEnd: endCol + 1,
                                     }}
-                                    className="bg-emerald-500/80 rounded px-2 py-0.5 text-white text-xs font-medium truncate"
+                                    className="bg-emerald-500/80 rounded-sm px-1 leading-4 text-white text-[10px] font-medium truncate"
                                 >
                                     {habit.title}
                                 </div>

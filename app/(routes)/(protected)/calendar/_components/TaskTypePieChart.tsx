@@ -28,8 +28,8 @@ function labelPos(startDeg: number, endDeg: number, offset: number) {
 }
 
 const DUMMY_DATA = [
-    { label: '完了', percent: 65, color: '#7aa2f7' },
-    { label: '未完了', percent: 35, color: '#3b4a7a' },
+    { label: '完了', percent: 65, color: 'var(--lumi-primary)' },
+    { label: '未完了', percent: 35, color: 'var(--lumi-chart-inactive)' },
 ];
 
 export default function TaskTypePieChart() {
@@ -42,7 +42,7 @@ export default function TaskTypePieChart() {
     });
 
     return (
-        <div className="bg-[#24283b]/50 backdrop-blur-sm border border-[#414868] rounded-2xl p-6 h-full">
+        <div className="bg-lumi-surface/50 backdrop-blur-sm border border-lumi-border rounded-2xl p-6 h-full">
             <h3 className="text-base font-bold text-white mb-4">タスク完了率</h3>
 
             <div className="flex justify-center">
@@ -81,7 +81,7 @@ export default function TaskTypePieChart() {
                             className="w-3 h-3 rounded-sm flex-shrink-0"
                             style={{ backgroundColor: d.color }}
                         />
-                        <span className="text-xs text-[#9aa5ce]">{d.label}</span>
+                        <span className="text-xs text-lumi-muted">{d.label}</span>
                     </div>
                 ))}
             </div>

@@ -56,6 +56,7 @@
   --color-lumi-track:          var(--lumi-track);
   --color-lumi-pet-owl:        var(--lumi-pet-owl);
   --color-lumi-pet-lumi:       var(--lumi-pet-lumi);
+  --color-lumi-chart-inactive: var(--lumi-chart-inactive);
 }
 
 /* ライトモード */
@@ -103,8 +104,9 @@
   --lumi-muted:         #6872a3; /* ミュートテキスト */
   --lumi-fg:            #1e2030; /* メインテキスト */
   --lumi-track:         #e2e5f5; /* プログレスバー背景 */
-  --lumi-pet-owl:       #f0ebfa; /* Owlモードのペット背景 */
-  --lumi-pet-lumi:      #e8f0fe; /* Lumiモードのペット背景 */
+  --lumi-pet-owl:          #f0ebfa; /* Owlモードのペット背景 */
+  --lumi-pet-lumi:         #e8f0fe; /* Lumiモードのペット背景 */
+  --lumi-chart-inactive:   #b8c2e0; /* チャートの非アクティブ/未完了セグメント */
 }
 
 /* ダークモード（Tokyo Night） */
@@ -151,8 +153,9 @@
   --lumi-muted:         #9aa5ce; /* ミュートテキスト */
   --lumi-fg:            #c0caf5; /* メインテキスト */
   --lumi-track:         #1c2238; /* プログレスバー背景 */
-  --lumi-pet-owl:       #2a1f4a; /* Owlモードのペット背景 */
-  --lumi-pet-lumi:      #1e2a40; /* Lumiモードのペット背景 */
+  --lumi-pet-owl:          #2a1f4a; /* Owlモードのペット背景 */
+  --lumi-pet-lumi:         #1e2a40; /* Lumiモードのペット背景 */
+  --lumi-chart-inactive:   #3b4a7a; /* チャートの非アクティブ/未完了セグメント */
 }
 
 @layer base {
