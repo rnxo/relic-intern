@@ -1,3 +1,5 @@
+export {}; // placeholder until route is implemented
+
 // import { profileRepository } from "@/app/features/profile/profile.repository";
 // import { profileService } from "@/app/features/profile/profile.service";
 // import { NextRequest, NextResponse } from "next/server";
