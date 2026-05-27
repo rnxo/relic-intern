@@ -7,16 +7,6 @@
 import { Habit, NewHabitInput } from "../features/habit/habit.type";
 import { Profile } from "../features/profile/profile.type";
 
-type MockHabitType = Habit & {
-  durationScore: number;
-  typeScore: number;
-  timeBlockScore: number;
-}
-
-interface IGetHeavinessFnArgs {
-  habit: NewHabitInput;
-  user: Profile;
-}
 
 const getHabitDurationScore = (duration: Habit["duration"]): number => {
   if (!duration) throw new Error("value of duration in empty");
@@ -80,7 +70,7 @@ export const getHeaviness = (habit: NewHabitInput, user: Profile): number => {
 
   let distance = Math.sqrt(Math.pow(xCoordDistance, 2) + Math.pow(yCoordDistance, 2));
 
-  if(distance > 5) distance = Math.floor(distance);
+  if(distance > 5) distance = 5;
   if(distance < 0 || 5 < distance) throw new Error("value of distance is out of range");
 
   const intermediateValue = distance * typeScore;

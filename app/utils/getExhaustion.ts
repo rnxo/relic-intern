@@ -2,10 +2,22 @@ import { Habit } from "../features/habit/habit.type";
 
 export function getExhaustion(habit: Habit): number {
   const now = new Date();
-  const currentTime = now.getHours() + Math.floor(now.getMinutes() / 60);
+  const currentTime = now.getHours() + now.getMinutes() / 60;
   const targetTimeBlockEnd = getTimeBlockEnd(habit.time_block);
   if(!habit.heaviness) throw new Error("heaviness value is undefined");
-  return habit.heaviness * Math.abs(currentTime - targetTimeBlockEnd);
+  const intermediateValue = habit.heaviness * Math.abs(currentTime - targetTimeBlockEnd);
+
+  if (0 < intermediateValue && intermediateValue < 20) {
+    return 1;
+  } else if (intermediateValue < 40) {
+    return 2;
+  } else if (intermediateValue < 60) {
+    return 3;
+  } else if (intermediateValue < 80) {
+    return 4;
+  } else {
+    return 5;
+  }
 }
 
 const getTimeBlockEnd = (timeBlock: Habit["time_block"]): number => {
