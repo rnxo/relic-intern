@@ -52,6 +52,13 @@ export async function signup(
   }
 
   revalidatePath("/", "layout");
+  redirect("/question");
+}
+
+export async function completeOnboarding() {
+  const supabase = await createClient();
+  await supabase.auth.updateUser({ data: { onboarding_completed: true } });
+  revalidatePath("/", "layout");
   redirect("/dashboard");
 }
 
