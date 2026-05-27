@@ -1,3 +1,13 @@
+export type HabitTypeKey = "exercises" | "study" | "meal" | "sleeping" | "others";
+
+export const HABIT_TYPE_LABELS: Record<HabitTypeKey, string> = {
+  exercises: "運動",
+  study:     "学習",
+  meal:      "食事",
+  sleeping:  "睡眠",
+  others:    "その他",
+};
+
 export type Habit = {
     id: string;
     user_id: string;
@@ -8,7 +18,7 @@ export type Habit = {
     is_completed: boolean;
     duration?: string;
     type?: string;
-    heaviness?: string;
+    heaviness?: number;
     completed_at: string;
     created_at: string;
     updated_at: string;

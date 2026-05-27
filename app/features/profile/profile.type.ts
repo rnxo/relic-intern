@@ -1,3 +1,11 @@
+type HabitTypeRanking = {
+  exercises: string;
+  study: string;
+  meal: string;
+  sleeping: string;
+  others: string;
+}
+
 export type Profile = {
   id: string;
   userName: string;
@@ -5,8 +13,11 @@ export type Profile = {
   maxFocusTimeScore: number;
   peakTimeBlock: string;
   peakTimeBlockScore: number;
+  typeRankingScore: HabitTypeRanking;
   createdAt: string;
   updatedAt: string;
 }
+
+
 
 export type UpdateProfileInput = Partial<Omit<Profile, "id" | "createdAt" | "updatedAt">>;

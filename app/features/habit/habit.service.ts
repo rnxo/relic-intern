@@ -6,14 +6,25 @@
     delete() -> habitデータの削除
 */
 
+import { getHeaviness } from "@/app/utils/getHeaviness";
 import { habitRepository } from "./habit.repository";
 import type { Habit, NewHabitInput, UpdateHabitInput } from "./habit.type";
+import { profileRepository } from "../profile/profile.repository";
 
 //今後バリデーションを追加する
 export const habitService = {
   getAll: async () => await habitRepository.getAll(),
   getById: async (id: string) => await habitRepository.getById(id),
-  create: async (input: NewHabitInput) => await habitRepository.create(input),
+  create: async (input: NewHabitInput) => {
+    try {          
+    const user = await profileRepository.get();
+    const heaviness: number = getHeaviness(input , user);
+    const heavinessIncludedInput = { ...input, heaviness: heaviness};
+    return await habitRepository.create(heavinessIncludedInput)
+    } catch(error) {
+      throw new Error(`habit.service create: ${error}`);
+    }
+  },
   update: async (id: string, newHabitInput: Habit) =>
     await habitRepository.update(id, newHabitInput),
   delete: async (id: string) => await habitRepository.delete(id),

@@ -94,10 +94,11 @@ function OtherIcon({ size }: { size: number }) {
 
 export function HabitTypeIcon({ type, size = 40 }: { type: string; size?: number }) {
   switch (type) {
-    case "運動": return <ExerciseIcon size={size} />;
-    case "学習": return <StudyIcon size={size} />;
-    case "睡眠": return <SleepIcon size={size} />;
-    case "食事": return <MealIcon size={size} />;
-    case "その他": return <OtherIcon size={size} />;
+    case "exercises": return <ExerciseIcon size={size} />;
+    case "study":     return <StudyIcon size={size} />;
+    case "sleeping":  return <SleepIcon size={size} />;
+    case "meal":      return <MealIcon size={size} />;
+    case "others":    return <OtherIcon size={size} />;
+    default:          return <OtherIcon size={size} />;
   }
 }

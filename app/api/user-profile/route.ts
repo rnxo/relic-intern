@@ -17,7 +17,6 @@ const fakeData: Profile = {
 export async function GET() {
   try {
     const data = await profileService.get();
-    console.log(JSON.stringify(data, null, 2));
     return NextResponse.json(data);
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown error";
