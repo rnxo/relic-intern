@@ -43,10 +43,10 @@ export default function LumiConsultation() {
         setIsLoading(true);
         try {
             const habitHistory = habits
-                .filter(h => h.isCompleted && h.completedAt)
+                .filter(h => h.is_completed && h.completed_at)
                 .map(h => ({
-                    time: h.completedAt,
-                    timeBlock: h.timeBlock, // ★追加: 時間帯データをAPIに送る
+                    time: h.completed_at,
+                    timeBlock: h.time_block,
                     title: h.title
                 }));
 
@@ -57,7 +57,7 @@ export default function LumiConsultation() {
                     mode: "analyze",
                     petId: pet.id,
                     habitHistory,
-                    currentLevel: pet?.level || 1
+                    currentLevel: pet?.intimate_level || 1
                 }),
             });
             const data = await res.json();

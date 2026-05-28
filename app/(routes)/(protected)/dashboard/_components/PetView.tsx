@@ -1,12 +1,12 @@
+import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { motion, AnimatePresence } from "motion/react";
 import { useHabits } from "@/app/features/habit/habit.state";
 import { Habit } from "@/app/features/habit/habit.type";
 import { PetSvg } from "./PetSvg";
-import { petAtom, usePet } from "@/app/features/pet/pet.state";
+import { usePet } from "@/app/features/pet/pet.state";
 import { Award } from "lucide-react";
 import { PetEmotionStatusCard } from "./PetEmotionStatusCard";
-import { useSetAtom } from "jotai";
 
 //PetSvgの表示
 //今日の完了habit数表示
@@ -16,7 +16,9 @@ import { useSetAtom } from "jotai";
 export default function PetView() {
   const { habits } = useHabits();
   const { pet } = usePet();
-  const setPet = useSetAtom(petAtom);
+  const [hoverExpression, setHoverExpression] = useState<"joy" | "normal" | "sad" | null>(null);
+
+  const displayExpression = hoverExpression ?? pet?.expression ?? "normal";
 
   const todayTotalCompletedHabits: Habit[] =
     habits?.filter((h) => h.is_completed) || [];
@@ -27,8 +29,8 @@ export default function PetView() {
       <motion.div
         className="relative group cursor-pointer"
         transition={{ duration: 0.8, ease: "easeOut" }}
-        onHoverStart={() => setPet((prev) => prev ? { ...prev, expression: "joy" } : prev)}
-        onHoverEnd={() => setPet((prev) => prev ? { ...prev, expression: "normal" } : prev)}
+        onHoverStart={() => setHoverExpression("joy")}
+        onHoverEnd={() => setHoverExpression(null)}
       >
         <div className="absolute -inset-4 rounded-full blur-xl opacity-0 group-hover:opacity-20 transition-opacity duration-500 bg-linear-to-r from-[#7aa2f7] to-[#7dcfff]" />
         <div className="relative">
@@ -40,7 +42,7 @@ export default function PetView() {
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.5 }}
               >
-                <PetSvg expression={pet?.expression ?? "normal"} />
+                <PetSvg expression={displayExpression} />
               </motion.div>
             }
           </AnimatePresence>
