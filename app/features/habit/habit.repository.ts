@@ -18,11 +18,22 @@ export const habitRepository: IHabitRepository = {
 
         if(!user) throw new Error("unauthorized user is trying to get some secured data");
 
+        const todayStr = new Date().toISOString().split('T')[0];
+
+        const { error: resetError } = await supabase
+            .from('habits')
+            .update({ is_completed: false })
+            .eq('user_id', user.id)
+            .eq('is_completed', true)
+            .lt('completed_at', todayStr);
+
+        if(resetError) throw new Error(resetError.message);
+
         const { data, error } = await supabase
             .from('habits')
             .select('*')
             .eq('user_id', user.id);
-        
+
         if(error) throw new Error(error.message);
         return data as Habit[];
     },

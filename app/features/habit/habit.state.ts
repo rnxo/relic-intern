@@ -2,13 +2,15 @@ import { atom, useAtom, useAtomValue, useSetAtom } from "jotai";
 import { Habit, NewHabitInput } from "./habit.type";
 import { updatePetStatsAtom } from "@/app/store/emotionAtom";
 import { testTimeAtom } from "@/app/store/testTimeAtom";
-import { petAtom } from "@/app/features/pet/pet.state";
+import { petAtom, usePet } from "@/app/features/pet/pet.state";
 import {
   calculateBlockPoints,
   TimeBlock,
   isBlockPassed,
 } from "@/app/lib/petCalculations";
 import { NextResponse } from "next/server";
+import { getTrust } from "@/app/utils/getTrust";
+import { getExhaustion } from "@/app/utils/getExhaustion";
 
 // habit一覧のベースatom（クライアント側で保持）
 const res = await fetch("/api/habit");
@@ -20,6 +22,7 @@ export const useHabits = () => {
   const testHour = useAtomValue(testTimeAtom);
   const setPetStats = useSetAtom(updatePetStatsAtom);
   const setPet = useSetAtom(petAtom);
+  const { pet } = usePet();
 
   const addNewHabit = async (input: NewHabitInput) => {
     const res = await fetch("/api/habit", {
@@ -66,7 +69,7 @@ export const useHabits = () => {
     //getTrust関数
     //getExhaustion関数
     const targetHabit = habits.find((habit) => habit.id === id);
-    if (!targetHabit) return;
+    if (!targetHabit || !pet) return;
 
     const isCompletedFlag = !targetHabit.is_completed;
     //habit.is_completedをfalseからtrueに変更したhabitを更新関数で更新
@@ -83,9 +86,15 @@ export const useHabits = () => {
         prev.map((habit) => (habit.id === id ? data : habit)),
       );
 
+      const updatePet = {
+        expression: "joy" as const,
+        trust: pet.trust + getTrust(targetHabit),
+        exhaustion: pet.exhaustion + getExhaustion(targetHabit),
+      }
+
       // 完了時のみ joy を一時的にセット、3秒後に normal へ戻す
       if (isCompletedFlag) {
-        setPet((prev) => prev ? { ...prev, expression: "joy" } : prev);
+        setPet((prev) => prev ? { ...prev, ...updatePet } : prev);
         setTimeout(() => {
           setPet((prev) => prev ? { ...prev, expression: "normal" } : prev);
         }, 3000);
