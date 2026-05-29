@@ -36,7 +36,7 @@ function RegisterHabitContent() {
           duration: editingHabit.duration ?? "90",
           time_block: editingHabit.time_block,
           target_days: editingHabit.target_days,
-          type: editingHabit.type ?? "運動",
+          type: editingHabit.type ?? "exercise",
           heaviness: editingHabit.heaviness,
         }
       : {
@@ -44,7 +44,7 @@ function RegisterHabitContent() {
           duration: "90",
           time_block: "morning",
           target_days: "7",
-          type: "exercises",
+          type: "exercise",
         }
   );
 

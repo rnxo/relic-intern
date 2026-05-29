@@ -1,7 +1,7 @@
-export type HabitTypeKey = "exercises" | "study" | "meal" | "sleeping" | "others";
+export type HabitTypeKey = "exercise" | "study" | "meal" | "sleeping" | "others";
 
 export const HABIT_TYPE_LABELS: Record<HabitTypeKey, string> = {
-  exercises: "運動",
+  exercise: "運動",
   study:     "学習",
   meal:      "食事",
   sleeping:  "睡眠",
