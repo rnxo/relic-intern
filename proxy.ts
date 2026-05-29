@@ -33,12 +33,14 @@ export async function proxy(request: NextRequest) {
         request.nextUrl.pathname.startsWith(path + '/')
     );
 
+    // ① 未ログインユーザーを弾く
     if (!user && !isPublic) {
         const url = request.nextUrl.clone()
         url.pathname = '/login'
         return NextResponse.redirect(url);
     }
 
+    // ② ログイン済みユーザーがログイン・登録画面に来たらリダイレクト
     const { pathname } = request.nextUrl;
     if (user && (pathname === '/login' || pathname === '/register')) {
         const url = request.nextUrl.clone()
@@ -46,11 +48,21 @@ export async function proxy(request: NextRequest) {
         return NextResponse.redirect(url)
     }
 
+    // ③ /api/user/[userId] へのアクセス時にuserIdの一致を検証
+    const apiUserMatch = pathname.match(/^\/api\/user\/([^/]+)/);
+    if (apiUserMatch) {
+        const requestedUserId = apiUserMatch[1];
+        if (!user || user.id !== requestedUserId) {
+            return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+        }
+    }
+
     return supabaseResponse
 }
 
 export const config = {
     matcher: [
-        '/((?!api|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+        // api の除外を削除
+        '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
     ],
 }
