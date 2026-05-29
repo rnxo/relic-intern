@@ -22,4 +22,4 @@ export type Pet = {
     created_at?: string;
 }
 
-export type GetTrustArg = Pick<Pet, 'trust'>
+export type UpdatePetType = Partial<Omit<Pet, "id" | "user_id" | "created_at" >>;

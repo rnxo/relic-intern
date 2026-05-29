@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/app/lib/supabase/server";
 
-export async function login(email: string, password: string) {
+export async function login(email: string, password: string): Promise<{ error: string } | never> {
   const supabase = await createClient();
 
   const { error } = await supabase.auth.signInWithPassword({
@@ -13,7 +13,7 @@ export async function login(email: string, password: string) {
   });
 
   if (error) {
-    redirect("/login?error=" + encodeURIComponent(error.message));
+    return { error: error.message };
   }
 
   revalidatePath("/", "layout");
@@ -24,7 +24,7 @@ export async function signup(
   userName: string,
   email: string,
   password: string,
-) {
+): Promise<{ error: string } | never> {
   const supabase = await createClient();
 
   const { data, error } = await supabase.auth.signUp({
@@ -34,23 +34,30 @@ export async function signup(
   });
 
   if (error) {
-    redirect("/register?error=" + encodeURIComponent(error.message));
+    return { error: error.message };
   }
 
   if (data.user) {
-    const { error: petError } =  await supabase.from("pet").insert({
+    const { error: petError } = await supabase.from("pet").insert({
       user_id: data.user.id,
       intimate_level: 1,
       trust: 0,
       exhaustion: 0,
       expression: "neutral",
     });
-    if(petError) {
-        console.log("[signup] pet insert failed: ", petError);
-        redirect("/register?error=" + encodeURIComponent(petError.message))
+    if (petError) {
+      console.log("[signup] pet insert failed: ", petError);
+      return { error: petError.message };
     }
   }
 
+  revalidatePath("/", "layout");
+  redirect("/question");
+}
+
+export async function completeOnboarding() {
+  const supabase = await createClient();
+  await supabase.auth.updateUser({ data: { onboarding_completed: true } });
   revalidatePath("/", "layout");
   redirect("/dashboard");
 }

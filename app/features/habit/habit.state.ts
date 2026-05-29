@@ -1,98 +1,96 @@
-import { atom, useAtom, useAtomValue, useSetAtom } from "jotai";
-import { Habit, NewHabitInput } from "./habit.type";
-import { updatePetStatsAtom } from "@/app/store/emotionAtom";
-import { testTimeAtom } from "@/app/store/testTimeAtom";
-import { petAtom } from "@/app/features/pet/pet.state";
-import {
-  calculateBlockPoints,
-  TimeBlock,
-  isBlockPassed,
-} from "@/app/lib/petCalculations";
-import { NextResponse } from "next/server";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import type { Habit, NewHabitInput } from "./habit.type";
+import { petQueryKey } from "@/app/features/pet/pet.state";
+import type { Pet } from "@/app/features/pet/pet.type";
 
-// habit一覧のベースatom（クライアント側で保持）
-const res = await fetch("/api/habit");
-const initHabits: Habit[] = res.ok ? await res.json() : [];
-const habitsAtom = atom<Habit[]>(initHabits);
+export const habitQueryKey = ["habits"] as const;
+
+export const useHabitsQuery = () => {
+    return useQuery({
+        queryKey: habitQueryKey,
+        queryFn: async (): Promise<Habit[]> => {
+            const res = await fetch("/api/habit");
+            if (!res.ok) throw new Error("Failed to fetch habits");
+            return res.json() as Promise<Habit[]>;
+        },
+        refetchOnWindowFocus: true,
+        staleTime: 0,
+    });
+};
 
 export const useHabits = () => {
-  const [habits, setHabits] = useAtom(habitsAtom);
-  const testHour = useAtomValue(testTimeAtom);
-  const setPetStats = useSetAtom(updatePetStatsAtom);
-  const setPet = useSetAtom(petAtom);
+    const queryClient = useQueryClient();
+    const { data: habits = [] } = useHabitsQuery();
 
-  const addNewHabit = async (input: NewHabitInput) => {
-    const res = await fetch("/api/habit", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(input),
+    const addMutation = useMutation({
+        mutationFn: async (input: NewHabitInput) => {
+            const res = await fetch("/api/habit", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(input),
+            });
+            if (!res.ok) throw new Error("Failed to add habit");
+            const { data } = await res.json();
+            return data as Habit;
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: habitQueryKey });
+        },
     });
 
-    console.log("addNewHabit: ", JSON.stringify(input, null, 2));
-
-    if (!res.ok) {
-      console.log(res);
-      throw new Error("ERROR: failed to add a new habit");
-    }
-
-    const { data } = await res.json();
-    setHabits((prev) => [...prev, data]);
-  };
-
-  const deleteHabit = async (id: string) => {
-    const res = await fetch(`/api/habit/${id}`, {
-      method: "DELETE",
+    const deleteMutation = useMutation({
+        mutationFn: async (id: string) => {
+            const res = await fetch(`/api/habit/${id}`, { method: "DELETE" });
+            if (!res.ok) throw new Error("Failed to delete habit");
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: habitQueryKey });
+        },
     });
 
-    if (!res.ok) throw new Error("ERROR: failed to delete habit data");
-    setHabits((prev) => prev.filter((habit) => habit.id !== id));
-  };
-
-  const updateHabit = async (id: string, input: Partial<Habit>) => {
-    const res = await fetch(`/api/habit/${id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(input),
+    const updateMutation = useMutation({
+        mutationFn: async ({ id, input }: { id: string; input: Partial<Habit> }) => {
+            const res = await fetch(`/api/habit/${id}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(input),
+            });
+            if (!res.ok) throw new Error("Failed to update habit");
+            const { data } = await res.json();
+            return data as Habit;
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: habitQueryKey });
+        },
     });
 
-    if (!res.ok) throw new Error("ERROR: failed to update habit data");
-    const { data } = await res.json();
-    setHabits((prev) => prev.map((h) => (h.id === id ? data : h)));
-  };
+    const completeMutation = useMutation({
+        mutationFn: async (id: string) => {
+            const res = await fetch(`/api/habit/${id}`, { method: "PATCH" });
+            if (!res.ok) throw new Error("Failed to complete habit");
+            const { data } = await res.json();
+            return data as Habit;
+        },
+        onSuccess: (data) => {
+            queryClient.invalidateQueries({ queryKey: habitQueryKey });
+            if (data.is_completed) {
+                // 完了時のjoy表現アニメーション（3秒間）
+                queryClient.setQueryData(petQueryKey, (prev: Pet | null | undefined) =>
+                    prev ? { ...prev, expression: "joy" as const } : prev
+                );
+                setTimeout(() => {
+                    queryClient.invalidateQueries({ queryKey: petQueryKey });
+                }, 3000);
+            } else {
+                queryClient.invalidateQueries({ queryKey: petQueryKey });
+            }
+        },
+    });
 
-  // ペット計算はクライアント側atomへの依存があるためstate層の責任
-  // ストリーク計算・DB更新はhabitService（Server Action）の責任
-  const completeHabit = async (id: string) => {
-    //getTrust関数
-    //getExhaustion関数
-    const targetHabit = habits.find((habit) => habit.id === id);
-    if (!targetHabit) return;
+    const addNewHabit = (input: NewHabitInput) => addMutation.mutateAsync(input);
+    const deleteHabit = (id: string) => deleteMutation.mutateAsync(id);
+    const updateHabit = (id: string, input: Partial<Habit>) => updateMutation.mutateAsync({ id, input });
+    const completeHabit = (id: string) => completeMutation.mutateAsync(id);
 
-    const isCompletedFlag = !targetHabit.is_completed;
-    //habit.is_completedをfalseからtrueに変更したhabitを更新関数で更新
-    try {
-      const res = await fetch(`/api/habit/${id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ is_completed: isCompletedFlag }),
-      });
-
-      if (!res.ok) throw new Error("ERROR: failed to complete habit");
-      const { data } = await res.json();
-      setHabits((prev) =>
-        prev.map((habit) => (habit.id === id ? data : habit)),
-      );
-
-      // 完了時のみ joy を一時的にセット、3秒後に normal へ戻す
-      if (isCompletedFlag) {
-        setPet((prev) => prev ? { ...prev, expression: "joy" } : prev);
-        setTimeout(() => {
-          setPet((prev) => prev ? { ...prev, expression: "normal" } : prev);
-        }, 3000);
-      }
-    } catch (error) {
-      return NextResponse.json({ message: error });
-    }
-  };
-  return { habits, addNewHabit, deleteHabit, updateHabit, completeHabit };
+    return { habits, addNewHabit, deleteHabit, updateHabit, completeHabit };
 };

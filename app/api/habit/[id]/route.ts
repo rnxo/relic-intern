@@ -39,6 +39,7 @@ export async function PATCH(
     const data = await habitService.complete(id);
     return NextResponse.json({ message: "success to patch habit data", data });
   } catch (error) {
+    console.log(error);
     return NextResponse.json({ message: error instanceof Error ? error.message : String(error) }, { status: 500 });
   }
 }

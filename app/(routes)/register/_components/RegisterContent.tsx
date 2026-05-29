@@ -8,13 +8,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Image from "next/image";
 import { motion, useReducedMotion, AnimatePresence, type Variants } from "motion/react";
-import { useSearchParams } from "next/navigation";
+import { validateSignup, hasErrors, translateSignupError, type SignupErrors } from "@/app/lib/authValidation";
 
 type InputData = {
     userName: string;
     email: string;
     password: string;
 };
+type FormErrors = SignupErrors;
 
 const STARS = [
     { id: 0,  x: 12, y: 8,  size: 1.5, delay: 0,   dur: 4.2 },
@@ -47,12 +48,12 @@ type FocusInputProps = {
     type: string;
     value: string;
     placeholder: string;
-    required?: boolean;
     onChange: (v: string) => void;
     reduced: boolean;
+    hasError?: boolean;
 };
 
-function FocusInput({ id, type, value, placeholder, required, onChange, reduced }: FocusInputProps) {
+function FocusInput({ id, type, value, placeholder, onChange, reduced, hasError }: FocusInputProps) {
     const [focused, setFocused] = useState(false);
     return (
         <div className="relative">
@@ -61,31 +62,36 @@ function FocusInput({ id, type, value, placeholder, required, onChange, reduced 
                 animate={reduced ? {} : focused ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.98 }}
                 transition={{ duration: 0.2, ease: "easeOut" }}
                 style={{
-                    boxShadow: "0 0 0 2px color-mix(in srgb, var(--lumi-primary) 45%, transparent), 0 0 20px color-mix(in srgb, var(--lumi-primary) 18%, transparent)",
+                    boxShadow: hasError
+                        ? "0 0 0 2px color-mix(in srgb, #ef4444 45%, transparent)"
+                        : "0 0 0 2px color-mix(in srgb, var(--lumi-primary) 45%, transparent), 0 0 20px color-mix(in srgb, var(--lumi-primary) 18%, transparent)",
                     borderRadius: 12,
                 }}
             />
             <Input
                 id={id}
                 type={type}
-                required={required}
                 value={value}
                 placeholder={placeholder}
                 onFocus={() => setFocused(true)}
                 onBlur={() => setFocused(false)}
                 onChange={(e) => onChange(e.target.value)}
-                className="h-auto bg-lumi-surface/50 border-lumi-border/35 rounded-xl px-4 py-2.5 text-lumi-fg placeholder:text-lumi-muted/25 focus-visible:ring-0 focus-visible:border-lumi-primary/55 transition-colors duration-200 relative z-10"
+                aria-invalid={hasError}
+                className={[
+                    "h-auto bg-lumi-surface/50 rounded-xl px-4 py-2.5 text-lumi-fg placeholder:text-lumi-muted/25 focus-visible:ring-0 transition-colors duration-200 relative z-10",
+                    hasError
+                        ? "border-red-500/50 focus-visible:border-red-500/70"
+                        : "border-lumi-border/35 focus-visible:border-lumi-primary/55",
+                ].join(" ")}
             />
         </div>
     );
 }
 
 function SignUpForm({ reduced }: { reduced: boolean }) {
-    const [input, setInput] = useState<InputData>({
-        userName: "",
-        email: "",
-        password: "",
-    });
+    const [input, setInput] = useState<InputData>({ userName: "", email: "", password: "" });
+    const [errors, setErrors] = useState<FormErrors>({});
+    const [serverError, setServerError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
     const userNameId = useId();
     const emailId = useId();
@@ -93,20 +99,34 @@ function SignUpForm({ reduced }: { reduced: boolean }) {
 
     const handleChange = (key: keyof InputData, value: string) => {
         setInput((prev) => ({ ...prev, [key]: value }));
+        if (errors[key]) setErrors((prev) => ({ ...prev, [key]: undefined }));
+        if (serverError) setServerError(null);
+    };
+
+    const validate = (): boolean => {
+        const next = validateSignup(input);
+        setErrors(next);
+        return !hasErrors(next);
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        if (!validate()) return;
         setLoading(true);
-        const userName = input.userName || "ゲスト";
-        await signup(userName, input.email, input.password);
+        setServerError(null);
+        const userName = input.userName.trim() || "ゲスト";
+        const result = await signup(userName, input.email, input.password);
         setLoading(false);
+        if (result?.error) {
+            setServerError(result.error);
+        }
     };
 
     const labelClass = "text-[0.7rem] font-semibold text-lumi-muted/50 uppercase tracking-[0.1em] mb-1.5 block";
+    const errorClass = "mt-1.5 text-[0.72rem] text-red-400/90 flex items-center gap-1";
 
     return (
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4" noValidate>
             <div>
                 <Label htmlFor={userNameId} className={labelClass}>ユーザー名</Label>
                 <FocusInput
@@ -117,17 +137,68 @@ function SignUpForm({ reduced }: { reduced: boolean }) {
             <div>
                 <Label htmlFor={emailId} className={labelClass}>メールアドレス</Label>
                 <FocusInput
-                    id={emailId} type="email" required value={input.email}
-                    placeholder="you@example.com" onChange={(v) => handleChange("email", v)} reduced={reduced}
+                    id={emailId} type="email" value={input.email}
+                    placeholder="you@example.com" onChange={(v) => handleChange("email", v)}
+                    reduced={reduced} hasError={!!errors.email}
                 />
+                <AnimatePresence>
+                    {errors.email && (
+                        <motion.p
+                            role="alert"
+                            className={errorClass}
+                            initial={{ opacity: 0, y: -4 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -4 }}
+                            transition={{ duration: 0.18 }}
+                        >
+                            <span aria-hidden="true">✕</span>{errors.email}
+                        </motion.p>
+                    )}
+                </AnimatePresence>
             </div>
             <div>
                 <Label htmlFor={passwordId} className={labelClass}>パスワード</Label>
                 <FocusInput
-                    id={passwordId} type="password" required value={input.password}
-                    placeholder="8文字以上" onChange={(v) => handleChange("password", v)} reduced={reduced}
+                    id={passwordId} type="password" value={input.password}
+                    placeholder="8文字以上" onChange={(v) => handleChange("password", v)}
+                    reduced={reduced} hasError={!!errors.password}
                 />
+                <AnimatePresence>
+                    {errors.password && (
+                        <motion.p
+                            role="alert"
+                            className={errorClass}
+                            initial={{ opacity: 0, y: -4 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -4 }}
+                            transition={{ duration: 0.18 }}
+                        >
+                            <span aria-hidden="true">✕</span>{errors.password}
+                        </motion.p>
+                    )}
+                </AnimatePresence>
             </div>
+
+            <AnimatePresence>
+                {serverError && (
+                    <motion.div
+                        role="alert"
+                        className="flex items-start gap-2.5 px-4 py-3 rounded-xl text-[0.8rem]"
+                        initial={{ opacity: 0, y: -6 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -6 }}
+                        transition={{ duration: 0.2 }}
+                        style={{
+                            background: "color-mix(in srgb, #ef4444 10%, transparent)",
+                            border: "1px solid color-mix(in srgb, #ef4444 28%, transparent)",
+                            color: "color-mix(in srgb, #ef4444 88%, white)",
+                        }}
+                    >
+                        <span className="mt-px select-none" aria-hidden="true">⚠</span>
+                        <span>{translateSignupError(serverError)}</span>
+                    </motion.div>
+                )}
+            </AnimatePresence>
 
             <div className="relative overflow-hidden rounded-xl mt-2">
                 <Button
@@ -181,8 +252,6 @@ function SignUpForm({ reduced }: { reduced: boolean }) {
 
 export default function RegisterContent() {
     const reduced = useReducedMotion() ?? false;
-    const searchParams = useSearchParams();
-    const error = searchParams.get("error");
 
     const cardVariants: Variants = {
         hidden: { opacity: 0, y: reduced ? 0 : 24, scale: reduced ? 1 : 0.97 },
@@ -422,23 +491,6 @@ export default function RegisterContent() {
                                 アカウントを作成してLumiと旅を始めよう
                             </p>
                         </motion.div>
-
-                        {/* Error banner */}
-                        {error && (
-                            <motion.div
-                                variants={rightItem}
-                                role="alert"
-                                className="mb-5 flex items-start gap-2.5 px-4 py-3 rounded-xl text-[0.8rem]"
-                                style={{
-                                    background: "color-mix(in srgb, #ef4444 10%, transparent)",
-                                    border: "1px solid color-mix(in srgb, #ef4444 28%, transparent)",
-                                    color: "color-mix(in srgb, #ef4444 88%, white)",
-                                }}
-                            >
-                                <span className="mt-px select-none" aria-hidden="true">⚠</span>
-                                <span>{error}</span>
-                            </motion.div>
-                        )}
 
                         {/* Google sign-in (disabled) */}
                         <motion.div variants={rightItem}>

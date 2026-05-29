@@ -44,7 +44,7 @@ function RegisterHabitContent() {
           duration: "90",
           time_block: "morning",
           target_days: "7",
-          type: "運動",
+          type: "exercises",
         }
   );
 
