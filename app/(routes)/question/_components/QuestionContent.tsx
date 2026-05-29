@@ -14,6 +14,7 @@ import {
     TIME_BLOCK_SCORE,
     HABIT_NAME_TO_KEY,
 } from "./types";
+import type { TimeBlock } from "@/app/features/habit/habit.type";
 
 const TOTAL_STEPS = 5;
 
@@ -33,7 +34,7 @@ export default function QuestionContent() {
     const [step, setStep] = useState(0);
     const [answers, setAnswers] = useState<OnboardingAnswers>({
         avg_task_duration: "",
-        peak_performance_time: "",
+        peak_performance_time: "morning",
         habit_type_ranking: ["運動", "学習", "食事", "睡眠", "その他"],
         userBaseValue: { x: 0, y: 0 },
         userBaseHabitPriority: { ...DEFAULT_HABIT_PRIORITY },
@@ -50,7 +51,7 @@ export default function QuestionContent() {
         }));
     };
 
-    const setTimeBlock = (val: string) => {
+    const setTimeBlock = (val: TimeBlock) => {
         setAnswers((prev) => ({
             ...prev,
             peak_performance_time: val,

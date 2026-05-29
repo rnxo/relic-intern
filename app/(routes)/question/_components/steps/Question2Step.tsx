@@ -2,8 +2,9 @@
 
 import { motion } from "motion/react";
 import { SelectCard } from "@/app/(routes)/(protected)/register-habit/_components/SelectCard";
+import type { TimeBlock } from "@/app/features/habit/habit.type";
 
-const TIME_BLOCKS = [
+const TIME_BLOCKS: { value: TimeBlock; label: string; time: string }[] = [
     { value: "morning",  label: "朝方",  time: "6:00 - 10:00" },
     { value: "daytime",  label: "日中",  time: "10:00 - 16:00" },
     { value: "evening",  label: "夕方",  time: "16:00 - 18:00" },
@@ -12,8 +13,8 @@ const TIME_BLOCKS = [
 ];
 
 interface Question2StepProps {
-    value: string | undefined;
-    onChange: (val: string) => void;
+    value: TimeBlock | undefined;
+    onChange: (val: TimeBlock) => void;
     onNext: () => void;
     onBack: () => void;
 }
