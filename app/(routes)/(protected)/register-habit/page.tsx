@@ -83,7 +83,7 @@ function RegisterHabitContent() {
         {/* Back Button */}
         <Button
           variant="ghost"
-          onClick={() => router.back()}
+          onClick={() => router.push("/dashboard")}
           className="text-[#9aa5ce] hover:text-white hover:bg-[#24283b] gap-2 rounded-xl"
         >
           <ChevronLeft size={20} />
