@@ -3,16 +3,16 @@ import { profileService } from "@/app/features/profile/profile.service";
 import { Profile } from "@/app/features/profile/profile.type";
 import { NextRequest, NextResponse } from "next/server";
 
-const fakeData: Profile = {
-  id: "001",
-  userName: "skyremt",
-  maxFocusTime: "90",
-  maxFocusTimeScore: 3,
-  peakTimeBlock: "night",
-  peakTimeBlockScore: 3,
-  createdAt: "today",
-  updatedAt: "today"
-}
+// const fakeData: Profile = {
+//   id: "001",
+//   userName: "skyremt",
+//   maxFocusTime: "90",
+//   maxFocusTimeScore: 3,
+//   peakTimeBlock: "night",
+//   peakTimeBlockScore: 3,
+//   createdAt: "today",
+//   updatedAt: "today"
+//}
 
 export async function GET() {
   try {
