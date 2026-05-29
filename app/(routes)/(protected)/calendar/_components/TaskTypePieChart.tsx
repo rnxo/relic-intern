@@ -32,11 +32,11 @@ function labelPos(startDeg: number, endDeg: number, offset: number) {
 }
 
 const TYPE_COLORS: Record<string, string> = {
-    '運動': 'var(--color-red-400)',
-    '学習': 'var(--color-blue-400)',
-    '食事': 'var(--color-green-400)',
-    '睡眠': 'var(--color-indigo-400)',
-    'その他': 'var(--color-purple-400)',
+    'exercises': 'var(--color-red-400)',
+    'study': 'var(--color-blue-400)',
+    'meal': 'var(--color-green-400)',
+    'sleeping': 'var(--color-indigo-400)',
+    'others': 'var(--color-purple-400)',
 };
 
 const VIEWS = ['今日の予定', '達成の内訳'];
@@ -56,7 +56,7 @@ function buildSegments(habits: Habit[]) {
     if (habits.length === 0) return [];
     const typeCounts: Record<string, number> = {};
     habits.forEach(h => {
-        const type = h.type ?? 'その他';
+        const type = h.type ?? 'others';
         typeCounts[type] = (typeCounts[type] ?? 0) + 1;
     });
     const total = habits.length;
