@@ -1,6 +1,8 @@
+import { TimeBlock } from "@/app/features/habit/habit.type";
+
 export type OnboardingAnswers = {
     avg_task_duration: string;
-    peak_performance_time: string;
+    peak_performance_time: TimeBlock;
     habit_type_ranking: string[];
     userBaseValue: { x: number; y: number };
     userBaseHabitPriority: {

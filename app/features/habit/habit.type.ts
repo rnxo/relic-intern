@@ -1,5 +1,5 @@
 export type HabitTypeKey = "exercise" | "study" | "meal" | "sleeping" | "others";
-
+export type TimeBlock = "morning" | "daytime" | "evening" | "night" | "midnight";
 export const HABIT_TYPE_LABELS: Record<HabitTypeKey, string> = {
   exercise: "運動",
   study:     "学習",
@@ -12,7 +12,7 @@ export type Habit = {
     id: string;
     user_id: string;
     title: string;
-    time_block: string;
+    time_block: TimeBlock;
     target_days: string;
     streak_days: number;
     is_completed: boolean;

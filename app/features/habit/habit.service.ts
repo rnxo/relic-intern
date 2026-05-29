@@ -44,7 +44,7 @@ export const habitService = {
   create: async (input: NewHabitInput) => {
     try {          
     const user = await profileRepository.get();
-    const heaviness: number = getHeaviness(input , user);
+    const heaviness: number = getHeaviness(input, user);
     const heavinessIncludedInput = { ...input, heaviness: heaviness};
     return await habitRepository.create(heavinessIncludedInput)
     } catch(error) {

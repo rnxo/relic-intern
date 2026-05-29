@@ -21,7 +21,6 @@ export default function HabitCardList() {
     const handleSignOut = async (e: React.MouseEvent<HTMLElement>) => {
         e.preventDefault();
         await signout();
-        console.log("user signout successed");
     }
 
     return (

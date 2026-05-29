@@ -46,7 +46,6 @@ export async function signup(
       expression: "neutral",
     });
     if (petError) {
-      console.log("[signup] pet insert failed: ", petError);
       return { error: petError.message };
     }
   }

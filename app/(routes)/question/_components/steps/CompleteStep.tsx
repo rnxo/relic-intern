@@ -29,7 +29,6 @@ export function CompleteStep({ onBack, answer }: CompleteStepProps) {
     const handleComplete = async () => {
         setLoading(true);
         
-        console.log(JSON.stringify(userAnswer, null, 2));
         updateProfile(userAnswer);
         await completeOnboarding();
     };
