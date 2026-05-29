@@ -1,5 +1,5 @@
 import { createClient } from "@/app/lib/supabase/server";
-import type { Pet } from "./pet.type";
+import type { Pet, UpdatePetType } from "./pet.type";
 
 /*
     petに必要なロジック
@@ -10,7 +10,7 @@ import type { Pet } from "./pet.type";
 
 interface IPetRepository {
     get: () => Promise<Pet>;
-    update: (input: Pet) => Promise<Pet>;
+    update: (input: UpdatePetType) => Promise<Pet>;
 }
 
 export const petRepository: IPetRepository = {
@@ -24,23 +24,24 @@ export const petRepository: IPetRepository = {
             .from('pet')
             .select('*')
             .eq('user_id', user.id)
+            .select()
             .single();
         
         if(!data) throw new Error("ERROR: failed to get pet data");
         return data as Pet;
     },
-    update: async (input: Pet) => {
+    update: async (input: UpdatePetType) => {
         const supabase = await createClient();
         const { data: { user } } = await supabase.auth.getUser();
         
         if(!user) throw new Error("Unauthorized");
 
-        const { data } = await supabase
+        const { data, error } = await supabase
             .from('pet')
             .update(input)
             .eq('user_id', user.id)
+            .select()
             .single();
-        
         if(!data) throw new Error("ERROR: failed to update pet data");
 
         return data as Pet;

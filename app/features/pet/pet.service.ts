@@ -8,9 +8,9 @@
 */
 
 import { petRepository } from "./pet.repository";
-import type { Pet } from "./pet.type";
+import type { Pet, UpdatePetType } from "./pet.type";
 
 export const petService = {
     get: async () => petRepository.get(),
-    update: async (input: Pet) => petRepository.update(input),
+    update: async (input: UpdatePetType) => petRepository.update(input),
 }

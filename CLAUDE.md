@@ -51,6 +51,35 @@ npm run lint     # ESLint実行
 ### データフロー
 習慣完了 → `completedHabitAtom` → `petCalculations`で信頼度/疲労度を計算 → `updatePetStatsAtom` → PUT `/api/pet` → Supabase
 
+## Implementation Documentation Rules
+
+実装時は必ず以下の内容を記述したMDファイルを作成すること。
+
+**記載内容:**
+- 変更を加えたファイル名
+- 新規作成したファイル名
+- 新規変数の説明
+- 既存ファイルへの追加コード
+- ファイルごとに追記したコードが何をしているかの説明
+
+**保存場所:** `/Users/shimadaaoi/Lumi/`（lumi-projectの親ディレクトリ）
+
+## Color Conventions
+
+CSSで色を使う際は必ず `/Users/shimadaaoi/Lumi/Lumi　CSS変数クラス対応表.md` に定義されたLumi CSS変数クラスを使用すること。
+
+**使用例:**
+- 背景色: `bg-lumi-base`, `bg-lumi-surface`, `bg-lumi-sidebar`
+- テキスト色: `text-lumi-fg`, `text-lumi-muted`, `text-lumi-primary`
+- ボーダー: `border-lumi-border`, `border-lumi-border/30`
+- アクセント: `bg-lumi-primary`, `text-lumi-secondary`
+
+**新規色を追加する場合:**
+- 実装ドキュメントMDファイルの冒頭に `## ⚠️ NEW COLOR ADDED` セクションを設け、追加した色の変数名・値・用途を明記すること
+- `/Users/shimadaaoi/Lumi/Lumi　CSS変数クラス対応表.md` にも追記すること
+
+ハードコードされた色（`#1a1b26` など）は使用禁止。
+
 ## Key Conventions
 
 - パスエイリアス: `@/*` → プロジェクトルート

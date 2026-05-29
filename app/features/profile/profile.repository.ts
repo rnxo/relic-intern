@@ -13,6 +13,7 @@ const toProfile = (row: Record<string, unknown>): Profile => ({
   maxFocusTimeScore: row.max_focus_time_score as number,
   peakTimeBlock: row.peak_time_block as string,
   peakTimeBlockScore: row.peak_time_block_score as number,
+  typeRankingScore: row.type_ranking_score as Profile["typeRankingScore"],
   createdAt: row.created_at as string,
   updatedAt: row.updated_at as string,
 });
@@ -24,6 +25,7 @@ const toSnakeCase = (input: UpdateProfileInput): Record<string, unknown> => {
   if (input.maxFocusTimeScore !== undefined) result.max_focus_time_score = input.maxFocusTimeScore;
   if (input.peakTimeBlock !== undefined) result.peak_time_block = input.peakTimeBlock;
   if (input.peakTimeBlockScore !== undefined) result.peak_time_block_score = input.peakTimeBlockScore;
+  if (input.typeRankingScore !== undefined) result.type_ranking_score = input.typeRankingScore;
   return result;
 };
 
