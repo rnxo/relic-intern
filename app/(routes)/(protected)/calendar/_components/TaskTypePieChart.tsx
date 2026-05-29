@@ -161,7 +161,7 @@ export default function TaskTypePieChart({ habits }: Props) {
                         {segments.map(d => (
                             <div key={d.label} className="flex items-center gap-2">
                                 <div
-                                    className="w-3 h-3 rounded-sm flex-shrink-0"
+                                    className="w-3 h-3 rounded-sm shrink-0"
                                     style={{ backgroundColor: d.color }}
                                 />
                                 <span className="text-xs text-lumi-muted">{d.label}</span>

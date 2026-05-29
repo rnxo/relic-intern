@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import type { Habit } from "@/app/features/habit/habit.type";
 import {
   Dialog,
