@@ -14,6 +14,7 @@ export default function HabitCardList() {
 
     const morningHabits = habits?.filter(h => h.time_block === 'morning') || [];
     const daytimeHabits = habits?.filter(h => h.time_block === 'daytime') || [];
+    const eveningHabits = habits?.filter(h => h.time_block === 'evening') || [];
     const nightHabits = habits?.filter(h => h.time_block === 'night') || [];
     const midnightHabits = habits?.filter(h => h.time_block === 'midnight') || [];
 
@@ -50,6 +51,7 @@ export default function HabitCardList() {
             <div className="space-y-12">
                 <HabitGroup title="朝方" habits={morningHabits} />
                 <HabitGroup title="日中" habits={daytimeHabits} />
+                <HabitGroup title="夕方" habits={eveningHabits} />
                 <HabitGroup title="夜" habits={nightHabits} />
                 <HabitGroup title="深夜" habits={midnightHabits} />
             </div>
