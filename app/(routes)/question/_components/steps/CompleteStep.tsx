@@ -3,16 +3,34 @@
 import { useState } from "react";
 import { motion } from "motion/react";
 import { completeOnboarding } from "@/app/auth/actions";
+import { OnboardingAnswers } from "../types";
+import { useProfile } from "@/app/features/profile/profile.state";
+import { UpdateProfileInput } from "@/app/features/profile/profile.type";
+import { getTimeBlockScore } from "@/app/utils/getTimeBlockScore";
+import { getHabitDurationScore } from "@/app/utils/getHabitDurationScore";
 
 interface CompleteStepProps {
     onBack: () => void;
+    answer: OnboardingAnswers;
 }
 
-export function CompleteStep({ onBack }: CompleteStepProps) {
+export function CompleteStep({ onBack, answer }: CompleteStepProps) {
     const [loading, setLoading] = useState(false);
+    const  { updateProfile } = useProfile();
+
+    const userAnswer: UpdateProfileInput = {
+        maxFocusTime: answer.avg_task_duration,
+        maxFocusTimeScore: getHabitDurationScore(answer.avg_task_duration),
+        peakTimeBlock: answer.peak_performance_time,
+        peakTimeBlockScore: getTimeBlockScore(answer.peak_performance_time),
+        typeRankingScore: answer.userBaseHabitPriority,
+    }
 
     const handleComplete = async () => {
         setLoading(true);
+        
+        console.log(JSON.stringify(userAnswer, null, 2));
+        updateProfile(userAnswer);
         await completeOnboarding();
     };
 
@@ -63,3 +81,7 @@ export function CompleteStep({ onBack }: CompleteStepProps) {
         </div>
     );
 }
+function getDurationScore(avg_task_duration: string): number | undefined {
+    throw new Error("Function not implemented.");
+}
+

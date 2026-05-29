@@ -4,11 +4,11 @@ export type OnboardingAnswers = {
     habit_type_ranking: string[];
     userBaseValue: { x: number; y: number };
     userBaseHabitPriority: {
-        Exercise: number;
-        Study: number;
-        Meal: number;
-        Sleep: number;
-        Other: number;
+        exercise: number;
+        study: number;
+        meal: number;
+        sleeping: number;
+        others: number;
     };
 };
 
@@ -29,9 +29,9 @@ export const TIME_BLOCK_SCORE: Record<string, number> = {
 };
 
 export const HABIT_NAME_TO_KEY: Record<string, keyof OnboardingAnswers["userBaseHabitPriority"]> = {
-    運動: "Exercise",
-    学習: "Study",
-    食事: "Meal",
-    睡眠: "Sleep",
-    その他: "Other",
+    運動: "exercise",
+    学習: "study",
+    食事: "meal",
+    睡眠: "sleeping",
+    その他: "others",
 };

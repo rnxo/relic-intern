@@ -6,51 +6,53 @@
 */
 import { Habit, NewHabitInput } from "../features/habit/habit.type";
 import { Profile } from "../features/profile/profile.type";
+import { getHabitDurationScore } from "./getHabitDurationScore";
+import { getTimeBlockScore } from "./getTimeBlockScore";
 
 
-const getHabitDurationScore = (duration: Habit["duration"]): number => {
-  if (!duration) throw new Error("value of duration in empty");
+// const getHabitDurationScore = (duration: Habit["duration"]): number => {
+//   if (!duration) throw new Error("value of duration in empty");
 
-  const durationNum: number = parseInt(duration);
+//   const durationNum: number = parseInt(duration);
 
-  if(durationNum <= 30) {
-    return 1;
-  } else if(durationNum <= 60) {
-    return 2;
-  } else if(durationNum <= 90) {
-    return 3;
-  } else if(durationNum <= 120) {
-    return 4;
-  } else if(durationNum > 120) {
-    return 5;
-  } else {
-    throw new Error("unvalid value");
-  }
-}
+//   if(durationNum <= 30) {
+//     return 1;
+//   } else if(durationNum <= 60) {
+//     return 2;
+//   } else if(durationNum <= 90) {
+//     return 3;
+//   } else if(durationNum <= 120) {
+//     return 4;
+//   } else if(durationNum > 120) {
+//     return 5;
+//   } else {
+//     throw new Error("unvalid value");
+//   }
+// }
 
 const getHabitTypeScore = (type: Habit["type"], typeRanking: Profile["typeRankingScore"]): number => {
   if (!type || !(type in typeRanking)) throw new Error("invalid type value");
   return Number(typeRanking[type as keyof typeof typeRanking]);
 };
 
-const getTimeBlockScore = (timeBlock: Habit["time_block"]): number => {
-  if(!timeBlock) throw new Error("value is empty");
+// const getTimeBlockScore = (timeBlock: Habit["time_block"]): number => {
+//   if(!timeBlock) throw new Error("value is empty");
 
-  switch(timeBlock) {
-    case "morning":
-      return 1;
-    case "daytime":
-      return 2;
-    case "evening":
-      return 3;
-    case "night":
-      return 4;
-    case "midnight":
-      return 5;
-    default:
-      return 0;
-  }
-}
+//   switch(timeBlock) {
+//     case "morning":
+//       return 1;
+//     case "daytime":
+//       return 2;
+//     case "evening":
+//       return 3;
+//     case "night":
+//       return 4;
+//     case "midnight":
+//       return 5;
+//     default:
+//       return 0;
+//   }
+// }
 
 
 export const getHeaviness = (habit: NewHabitInput, user: Profile): number => {

@@ -1,9 +1,9 @@
 type HabitTypeRanking = {
-  exercises: string;
-  study: string;
-  meal: string;
-  sleeping: string;
-  others: string;
+  exercise: number;
+  study: number;
+  meal: number;
+  sleeping: number;
+  others: number;
 }
 
 export type Profile = {

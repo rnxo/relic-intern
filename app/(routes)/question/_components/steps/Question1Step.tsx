@@ -4,10 +4,10 @@ import { motion } from "motion/react";
 import { SelectCard } from "@/app/(routes)/(protected)/register-habit/_components/SelectCard";
 
 const DURATION_OPTIONS = [
-    { label: "30分未満", value: "under30" },
-    { label: "60分未満", value: "under60" },
-    { label: "90分未満", value: "under90" },
-    { label: "120分未満", value: "under120" },
+    { label: "30分未満", value: "30" },
+    { label: "60分未満", value: "60" },
+    { label: "90分未満", value: "90" },
+    { label: "120分未満", value: "120" },
     { label: "120分以上", value: "over120" },
 ];
 
@@ -28,11 +28,8 @@ export function Question1Step({ value, onChange, onNext }: Question1StepProps) {
                 >
                     <p className="text-[0.75rem] font-semibold text-lumi-muted/40 uppercase tracking-[0.1em] mb-2">質問 1 / 3</p>
                     <h2 className="text-[1.4rem] font-bold text-lumi-fg tracking-tight leading-tight">
-                        タスクの平均的な所要時間は？
+                        あなたの平均集中時間は？
                     </h2>
-                    <p className="text-[0.82rem] text-lumi-muted/75 mt-2">
-                        あなたが取り組む習慣の平均的な時間を選んでください
-                    </p>
                 </motion.div>
 
                 <motion.div

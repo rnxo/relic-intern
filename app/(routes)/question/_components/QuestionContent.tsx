@@ -17,7 +17,7 @@ import {
 
 const TOTAL_STEPS = 5;
 
-const DEFAULT_HABIT_PRIORITY = { Exercise: 0, Study: 0, Meal: 0, Sleep: 0, Other: 0 };
+const DEFAULT_HABIT_PRIORITY = { exercise: 0, study: 0, meal: 0, sleeping: 0, others: 0 };
 
 function calcHabitPriority(ranking: string[]): OnboardingAnswers["userBaseHabitPriority"] {
     const result = { ...DEFAULT_HABIT_PRIORITY };
@@ -161,6 +161,7 @@ export default function QuestionContent() {
                         </div>
                     )}
 
+                    { /* ステップ管理 */}
                     <div className="flex-1 relative">
                         <AnimatePresence mode="wait">
                             {step === 0 && (
@@ -224,7 +225,7 @@ export default function QuestionContent() {
                                     exit={{ opacity: 0, x: reduced ? 0 : -20 }}
                                     transition={{ duration: 0.25 }}
                                 >
-                                    <CompleteStep onBack={back} />
+                                    <CompleteStep answer={answers} onBack={back} />
                                 </motion.div>
                             )}
                         </AnimatePresence>
