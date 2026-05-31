@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <defs>
+    <radialGradient id="iconBg" cx="50%" cy="40%" r="75%">
+      <stop offset="0%"   stop-color="#24283b"/>
+      <stop offset="100%" stop-color="#1a1b26"/>
+    </radialGradient>
+    <radialGradient id="iconLumiBody" cx="38%" cy="32%" r="68%">
+      <stop offset="0%"   stop-color="#a8c7ff"/>
+      <stop offset="45%"  stop-color="#7aa2f7"/>
+      <stop offset="100%" stop-color="#4a72c4"/>
+    </radialGradient>
+    <radialGradient id="iconLumiEar" cx="35%" cy="30%" r="70%">
+      <stop offset="0%"   stop-color="#9ab8ff"/>
+      <stop offset="100%" stop-color="#6288e0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Background rounded square (iOS/Android tile) -->
+  <rect width="256" height="256" rx="56" ry="56" fill="url(#iconBg)"/>
+
+  <!-- Lumi centered inside safe area (~80% inner) -->
+  <g transform="translate(28 32) scale(0.91)">
+    <!-- Ground shadow -->
+    <ellipse cx="110" cy="196" rx="52" ry="9" fill="rgba(122,162,247,0.22)"/>
+
+    <!-- Ears -->
+    <circle cx="60"  cy="60" r="28" fill="url(#iconLumiEar)"/>
+    <circle cx="160" cy="60" r="28" fill="url(#iconLumiEar)"/>
+
+    <!-- Main body -->
+    <circle cx="110" cy="110" r="80" fill="url(#iconLumiBody)"/>
+
+    <!-- Body shine -->
+    <ellipse cx="86" cy="70" rx="22" ry="14" fill="rgba(255,255,255,0.15)" transform="rotate(-25 86 70)"/>
+
+    <!-- Joy: blush -->
+    <ellipse cx="80"  cy="128" rx="14" ry="8" fill="#ffb7b7" opacity="0.6"/>
+    <ellipse cx="140" cy="128" rx="14" ry="8" fill="#ffb7b7" opacity="0.6"/>
+
+    <!-- Joy: crescent eyes (^ shape) -->
+    <path d="M 78 106 Q 85 97 92 106" stroke="#1c2238" stroke-width="6" fill="none" stroke-linecap="round"/>
+    <path d="M 128 106 Q 135 97 142 106" stroke="#1c2238" stroke-width="6" fill="none" stroke-linecap="round"/>
+
+    <!-- Joy: smile -->
+    <path d="M 86 144 Q 110 180 134 144" stroke="#1c2238" stroke-width="6" fill="none" stroke-linecap="round"/>
+  </g>
+</svg>
