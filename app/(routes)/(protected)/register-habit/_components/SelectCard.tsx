@@ -3,16 +3,16 @@ import { cn } from "@/app/utils/cn-utils";
 import { ButtonHTMLAttributes, ReactNode } from "react";
 
 const SelectCardVariants = cva(
-  "rounded-xl font-medium bg-lumi-base/30 text-lumi-primary shadow hover:border-2 hover:border-lumi-primary",
+  "rounded-xl font-medium bg-lumi-base/30 text-lumi-primary shadow hover:border-2 hover:border-lumi-primary transition-all duration-200 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lumi-primary",
   {
     variants: {
       variant: {
         primary: "",
       },
       size: {
-        sm: "text-sm px-4 py-2",
-        md: "text-base px-6 py-4 w-32 h-24",
-        lg: "text-xl px-8 py-6",
+        sm: "text-sm px-3 py-2 min-h-[44px]",
+        md: "text-base px-4 py-3 min-h-[60px]",
+        lg: "text-xl px-6 py-4",
       },
     },
     defaultVariants: {
@@ -43,7 +43,7 @@ export function SelectCard({
       className={cn(
         SelectCardVariants({ variant, size }),
         className,
-        isSelected && "bg-lumi-primary/50",
+        isSelected && "bg-lumi-primary/50 border-2 border-lumi-primary",
       )}
       {...props}
     >

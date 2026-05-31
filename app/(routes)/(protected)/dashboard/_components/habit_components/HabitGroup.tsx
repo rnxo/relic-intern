@@ -17,22 +17,28 @@ export function HabitGroup({ title, habits }: { title: string, habits: Habit[] }
     if (!mounted || habits.length === 0) return null;
 
     return (
-        <div className="space-y-4">
+        <section className="space-y-3" aria-label={`${title}の習慣グループ`}>
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="flex items-center gap-2 group cursor-pointer focus:outline-hidden"
+                className="flex items-center gap-2 group cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-lumi-primary rounded-lg min-h-[44px] px-1"
+                aria-expanded={isOpen}
+                aria-controls={`habit-group-${title}`}
             >
                 <motion.div
                     animate={{ rotate: isOpen ? 0 : -90 }}
                     transition={{ duration: 0.2, ease: "easeInOut" }}
                 >
-                    <ChevronDown className="text-[#7aa2f7] group-hover:text-[#7dcfff] transition-colors" size={20} />
+                    <ChevronDown
+                        className="text-lumi-primary group-hover:text-lumi-primary-hover transition-colors duration-200"
+                        size={20}
+                        aria-hidden="true"
+                    />
                 </motion.div>
                 <div className="flex items-baseline gap-3">
-                    <h3 className="text-xl font-bold text-white/90 tracking-wide group-hover:text-white transition-colors">
+                    <h2 className="text-base sm:text-lg font-bold text-lumi-fg/90 tracking-wide group-hover:text-lumi-fg transition-colors duration-200">
                         {title}
-                    </h3>
-                    <span className="text-xs font-medium text-[#414868] bg-[#24283b] px-2 py-0.5 rounded-full">
+                    </h2>
+                    <span className="text-xs font-medium text-lumi-muted bg-lumi-surface px-2 py-0.5 rounded-full border border-lumi-border/50">
                         {habits.length} tasks
                     </span>
                 </div>
@@ -41,13 +47,14 @@ export function HabitGroup({ title, habits }: { title: string, habits: Habit[] }
             <AnimatePresence initial={false}>
                 {isOpen && (
                     <motion.div
+                        id={`habit-group-${title}`}
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: "auto", opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
                         transition={{ duration: 0.3, ease: [0.04, 0.62, 0.23, 0.98] }}
                         className="overflow-hidden"
                     >
-                        <div className="space-y-3 pb-2 pt-1">
+                        <div className="space-y-2.5 pb-2 pt-1">
                             {habits.map((habit) => (
                                 <HabitItem habit={habit} key={habit.id} />
                             ))}
@@ -55,6 +62,6 @@ export function HabitGroup({ title, habits }: { title: string, habits: Habit[] }
                     </motion.div>
                 )}
             </AnimatePresence>
-        </div>
+        </section>
     );
 }

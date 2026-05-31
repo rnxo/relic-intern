@@ -42,12 +42,12 @@ export function PetEmotionStatusCard({ pet }: { pet: Pet }) {
       initial={prefersReducedMotion ? false : { opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, ease: "easeOut" as const }}
-      className="w-full max-w-[320px]"
+      className="w-full max-w-[280px]"
     >
-      <Card className="w-full text-white bg-[#24283b]/50 backdrop-blur-md border border-[#414868] rounded-3xl overflow-hidden hover:border-[#bb9af7]/30 transition-colors duration-300">
+      <Card className="w-full bg-lumi-surface/50 backdrop-blur-md border border-lumi-border rounded-3xl overflow-hidden hover:border-lumi-secondary/30 transition-colors duration-300">
         <CardHeader className="pb-3 pt-6 px-6">
-          <div className="flex items-center justify-between">
-            <CardTitle className="text-base font-bold text-white/90 tracking-wide">
+          <div className="flex items-center justify-between gap-2">
+            <CardTitle className="text-sm font-bold text-lumi-fg tracking-wide">
               感情ステータス
             </CardTitle>
             {/* expression バッジ */}
@@ -80,24 +80,24 @@ export function PetEmotionStatusCard({ pet }: { pet: Pet }) {
           {/* 信頼値 */}
           <div className="space-y-2" role="group" aria-label="信頼値ステータス">
             <div className="flex items-center justify-between">
-              <Label className="flex items-center gap-2 text-sm font-semibold text-[#7aa2f7] cursor-default">
+              <Label className="flex items-center gap-2 text-xs font-semibold text-lumi-primary cursor-default">
                 <Heart
-                  size={15}
-                  className="fill-[#7aa2f7] text-[#7aa2f7]"
+                  size={14}
+                  className="fill-lumi-primary text-lumi-primary"
                   aria-hidden="true"
                 />
                 信頼値
               </Label>
               <span
-                className="text-sm font-bold tabular-nums text-[#7aa2f7]"
+                className="text-sm font-bold tabular-nums text-lumi-primary"
                 aria-label={`信頼値 ${pet.trust} / 100`}
               >
                 {pet.trust}
-                <span className="text-xs font-normal text-white/30">/100</span>
+                <span className="text-xs font-normal text-lumi-muted/50">/100</span>
               </span>
             </div>
             <div
-              className="h-2.5 w-full bg-[#1a1b26] rounded-full overflow-hidden"
+              className="h-2.5 w-full bg-lumi-track rounded-full overflow-hidden"
               role="progressbar"
               aria-valuenow={pet.trust}
               aria-valuemin={0}
@@ -107,9 +107,8 @@ export function PetEmotionStatusCard({ pet }: { pet: Pet }) {
               <motion.div
                 className="h-full rounded-full"
                 style={{
-                  background:
-                    "linear-gradient(90deg, #3d59a1 0%, #7aa2f7 60%, #7dcfff 100%)",
-                  boxShadow: "0 0 8px 0 rgba(122,162,247,0.5)",
+                  background: "linear-gradient(90deg, color-mix(in srgb, var(--lumi-primary) 50%, transparent) 0%, var(--lumi-primary) 60%, var(--lumi-primary-hover) 100%)",
+                  boxShadow: "0 0 8px 0 color-mix(in srgb, var(--lumi-primary) 50%, transparent)",
                 }}
                 animate={barAnimation(pet.trust)}
                 transition={barTransition}
@@ -118,14 +117,14 @@ export function PetEmotionStatusCard({ pet }: { pet: Pet }) {
           </div>
 
           {/* 区切り線 */}
-          <div className="border-t border-[#414868]/50" aria-hidden="true" />
+          <div className="border-t border-lumi-border/50" aria-hidden="true" />
 
           {/* 疲労度 */}
           <div className="space-y-2" role="group" aria-label="疲労度ステータス">
             <div className="flex items-center justify-between">
-              <Label className="flex items-center gap-2 text-sm font-semibold text-[#f7768e] cursor-default">
+              <Label className="flex items-center gap-2 text-xs font-semibold text-[#f7768e] cursor-default">
                 <Battery
-                  size={15}
+                  size={14}
                   className="text-[#f7768e]"
                   aria-hidden="true"
                 />
@@ -136,11 +135,11 @@ export function PetEmotionStatusCard({ pet }: { pet: Pet }) {
                 aria-label={`疲労度 ${pet.exhaustion} / 100`}
               >
                 {pet.exhaustion}
-                <span className="text-xs font-normal text-white/30">/100</span>
+                <span className="text-xs font-normal text-lumi-muted/50">/100</span>
               </span>
             </div>
             <div
-              className="h-2.5 w-full bg-[#1a1b26] rounded-full overflow-hidden"
+              className="h-2.5 w-full bg-lumi-track rounded-full overflow-hidden"
               role="progressbar"
               aria-valuenow={pet.exhaustion}
               aria-valuemin={0}
@@ -150,8 +149,7 @@ export function PetEmotionStatusCard({ pet }: { pet: Pet }) {
               <motion.div
                 className="h-full rounded-full"
                 style={{
-                  background:
-                    "linear-gradient(90deg, #8c3130 0%, #f7768e 60%, #ff9e64 100%)",
+                  background: "linear-gradient(90deg, #8c3130 0%, #f7768e 60%, #ff9e64 100%)",
                   boxShadow: "0 0 8px 0 rgba(247,118,142,0.45)",
                 }}
                 animate={barAnimation(pet.exhaustion)}

@@ -15,7 +15,7 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
-import { ChevronLeft, Pencil, Plus, Check } from "lucide-react";
+import { ChevronLeft, Pencil, Plus, Check, Loader2 } from "lucide-react";
 import { motion } from "motion/react";
 import { HabitTypeCardList } from "./_components/HabitTypeCardList";
 import { DurationSelectorFiled } from "./_components/DurationSelectorField";
@@ -74,58 +74,61 @@ function RegisterHabitContent() {
   };
 
   return (
-    <div className="min-h-screen bg-[#1a1b26] text-white p-8 pl-28">
+    <div className="min-h-screen bg-lumi-base text-lumi-fg">
       <motion.div
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
-        className="max-w-2xl mx-auto space-y-8"
+        className="max-w-2xl mx-auto px-4 py-6 sm:px-6 sm:py-8 space-y-6"
       >
-        {/* Back Button */}
+        {/* 戻るボタン */}
         <Button
           variant="ghost"
           onClick={() => router.push("/dashboard")}
-          className="text-[#9aa5ce] hover:text-white hover:bg-[#24283b] gap-2 rounded-xl"
+          className="min-h-[44px] text-lumi-muted hover:text-lumi-fg hover:bg-lumi-surface gap-2 rounded-xl cursor-pointer transition-all duration-200"
+          aria-label="ダッシュボードに戻る"
         >
-          <ChevronLeft size={20} />
+          <ChevronLeft size={20} aria-hidden="true" />
           <span>ダッシュボードに戻る</span>
         </Button>
 
-        <div className="space-y-2">
-          <h1 className="text-4xl font-extrabold tracking-tight">
+        {/* ページタイトル */}
+        <div className="space-y-1.5">
+          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-lumi-fg">
             {isEditMode ? "習慣を編集する" : "新しい習慣を始める"}
           </h1>
-          <p className="text-gray-400">
+          <p className="text-sm text-lumi-muted leading-relaxed">
             {isEditMode
               ? "内容を変更してLumiと一緒に続けましょう。"
               : "一歩ずつ、確実に。あなたの成長をLumiと一緒に記録しましょう。"}
           </p>
         </div>
 
-        <Card className="bg-[#24283b]/50 backdrop-blur-md border border-[#414868] rounded-3xl overflow-hidden shadow-2xl">
-          <CardHeader className="border-b border-[#414868]/30 pb-8">
-            <CardTitle className="text-2xl font-bold flex items-center gap-3">
-              <div className="p-3 bg-[#7aa2f7]/20 rounded-2xl">
+        {/* フォームカード */}
+        <Card className="bg-lumi-surface/50 backdrop-blur-md border border-lumi-border rounded-3xl overflow-hidden shadow-xl">
+          <CardHeader className="border-b border-lumi-border/30 pb-6">
+            <CardTitle className="text-lg sm:text-xl font-bold flex items-center gap-3">
+              <div className="p-2.5 bg-lumi-primary/20 rounded-xl flex-shrink-0">
                 {isEditMode
-                  ? <Pencil className="text-[#7aa2f7]" size={24} />
-                  : <Plus className="text-[#7aa2f7]" size={24} />
+                  ? <Pencil className="text-lumi-primary" size={20} aria-hidden="true" />
+                  : <Plus className="text-lumi-primary" size={20} aria-hidden="true" />
                 }
               </div>
-              <span className="text-[#9aa5ce]">
+              <span className="text-lumi-muted text-base sm:text-lg">
                 {isEditMode ? "習慣の編集" : "習慣の設定"}
               </span>
             </CardTitle>
-            <CardDescription className="text-gray-400">
+            <CardDescription className="text-lumi-muted text-sm">
               習慣の名前とタイミングを決めてください。
             </CardDescription>
           </CardHeader>
 
-          <CardContent className="pt-8 px-8 pb-10">
-            <form onSubmit={handleSubmit} className="space-y-8">
-              {/* Title */}
-              <div className="space-y-3">
+          <CardContent className="pt-6 px-4 sm:px-6 pb-8">
+            <form onSubmit={handleSubmit} className="space-y-7">
+              {/* 習慣名 */}
+              <div className="space-y-2.5">
                 <Label
                   htmlFor="title"
-                  className="text-sm font-bold text-[#7aa2f7] uppercase tracking-wider ml-1"
+                  className="text-xs font-bold text-lumi-primary uppercase tracking-wider"
                 >
                   習慣名
                 </Label>
@@ -134,26 +137,26 @@ function RegisterHabitContent() {
                   placeholder="例: 朝の読書、スクワット..."
                   value={input.title}
                   onChange={(e) => handleChange("title", e.target.value)}
-                  className="w-full h-12 rounded-2xl bg-lumi-base border-2 border-lumi-primary/30 hover:border-lumi-primary"
+                  className="w-full h-12 rounded-2xl bg-lumi-base border-2 border-lumi-primary/30 hover:border-lumi-primary focus:border-lumi-primary text-lumi-fg placeholder:text-lumi-muted/50 transition-colors"
                   required
+                  aria-required="true"
                 />
               </div>
 
-              <div className="space-y-3 flex-col">
-                <Label className="text-sm font-bold text-lumi-primary">
+              {/* 所要時間 */}
+              <div className="space-y-2.5">
+                <Label className="text-xs font-bold text-lumi-primary uppercase tracking-wider">
                   所要時間
                 </Label>
-                <div className="flex justify-center">
-                  <DurationSelectorFiled
-                    value={input.duration}
-                    onChange={(val) => handleChange("duration", val)}
-                  />
-                </div>
+                <DurationSelectorFiled
+                  value={input.duration}
+                  onChange={(val) => handleChange("duration", val)}
+                />
               </div>
 
-              {/* Time Block */}
-              <div className="space-y-3">
-                <Label className="text-sm font-bold text-[#7aa2f7] uppercase tracking-wider ml-1">
+              {/* 時間帯 */}
+              <div className="space-y-2.5">
+                <Label className="text-xs font-bold text-lumi-primary uppercase tracking-wider">
                   実行する時間帯
                 </Label>
                 <TimeBlockSelector
@@ -162,9 +165,9 @@ function RegisterHabitContent() {
                 />
               </div>
 
-              {/* Habit Type */}
-              <div className="space-y-3">
-                <Label className="text-sm font-bold text-lumi-primary">
+              {/* 習慣カテゴリ */}
+              <div className="space-y-2.5">
+                <Label className="text-xs font-bold text-lumi-primary uppercase tracking-wider">
                   登録する習慣の系統
                 </Label>
                 <HabitTypeCardList
@@ -173,9 +176,9 @@ function RegisterHabitContent() {
                 />
               </div>
 
-              {/* Target Days */}
-              <div className="space-y-4">
-                <Label className="text-sm font-bold text-[#7aa2f7] tracking-wider ml-1">
+              {/* 目標日数 */}
+              <div className="space-y-2.5">
+                <Label className="text-xs font-bold text-lumi-primary uppercase tracking-wider">
                   目標日数
                 </Label>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -184,35 +187,38 @@ function RegisterHabitContent() {
                       key={day}
                       type="button"
                       onClick={() => handleChange("target_days", day)}
-                      className={`h-12 rounded-xl border font-bold transition-all flex items-center justify-center gap-2 ${
+                      className={`min-h-[52px] rounded-xl border font-bold transition-all duration-200 flex items-center justify-center gap-1.5 cursor-pointer text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lumi-primary ${
                         input.target_days === day
-                          ? "bg-[#7aa2f7] border-[#7aa2f7] text-white shadow-[0_0_15px_rgba(122,162,247,0.3)]"
-                          : "bg-[#1a1b26]/30 border-[#414868] text-gray-400 hover:border-[#7aa2f7]/50"
+                          ? "bg-lumi-primary border-lumi-primary text-white shadow-lg"
+                          : "bg-lumi-base/30 border-lumi-border text-lumi-muted hover:border-lumi-primary/50 hover:text-lumi-fg"
                       }`}
+                      aria-pressed={input.target_days === day}
+                      aria-label={`目標日数 ${day} 日`}
                     >
-                      {input.target_days === day && <Check size={16} />}
+                      {input.target_days === day && <Check size={14} aria-hidden="true" />}
                       {day}日
                     </button>
                   ))}
                 </div>
               </div>
 
-              {/* Submit Button */}
+              {/* 送信ボタン */}
               <motion.div
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className="pt-4"
+                className="pt-2"
               >
                 <Button
                   type="submit"
                   disabled={isSubmitting || !input.title.trim()}
-                  className="w-full h-16 bg-[#7aa2f7] hover:bg-[#7dcfff] text-white font-black text-xl rounded-2xl shadow-xl shadow-[#7aa2f7]/10 flex items-center justify-center gap-3 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full min-h-[56px] bg-lumi-primary hover:bg-lumi-primary-hover text-white font-black text-base rounded-2xl shadow-xl flex items-center justify-center gap-3 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                  aria-label={isEditMode ? "変更を保存する" : "習慣を登録する"}
                 >
                   {isSubmitting ? (
-                    <div className="w-6 h-6 border-3 border-white/30 border-t-white rounded-full animate-spin" />
+                    <Loader2 className="w-5 h-5 animate-spin" aria-label="送信中..." />
                   ) : (
                     <>
-                      <Check size={24} />
+                      <Check size={20} aria-hidden="true" />
                       <span>{isEditMode ? "変更を保存する" : "習慣を登録する"}</span>
                     </>
                   )}

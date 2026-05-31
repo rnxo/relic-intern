@@ -171,3 +171,14 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer utilities {
+  /* iOS セーフエリア対応: ボトムナビゲーション */
+  .safe-area-bottom {
+    padding-bottom: max(0.25rem, env(safe-area-inset-bottom));
+  }
+  /* モバイルでの横スクロール防止 */
+  .overflow-x-clip {
+    overflow-x: clip;
+  }
+}

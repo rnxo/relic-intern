@@ -13,17 +13,26 @@ interface HabitTypesCardListProps {
 
 export function HabitTypeCardList({ value, onChange }: HabitTypesCardListProps) {
   return (
-    <div className="flex gap-2">
+    /* モバイル: 3列グリッド、sm以上: habitTypesの数に応じて自動フィット */
+    <div
+      className="grid grid-cols-3 sm:grid-cols-5 gap-2"
+      role="group"
+      aria-label="習慣のカテゴリを選択"
+    >
       {habitTypes.map((type) => (
         <SelectCard
           key={type.key}
           type="button"
-          className="w-32 h-24 flex flex-col items-center justify-center"
+          className="w-full h-20 sm:h-24 flex flex-col items-center justify-center gap-1 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lumi-primary"
           isSelected={value === type.key}
           onClick={() => onChange(type.key)}
+          aria-pressed={value === type.key}
+          aria-label={type.label}
         >
           <HabitTypeIcon type={type.key} />
-          <span className="text-lumi-secondary font-bold">{type.label}</span>
+          <span className="text-xs sm:text-sm text-lumi-secondary font-bold leading-tight text-center">
+            {type.label}
+          </span>
         </SelectCard>
       ))}
     </div>

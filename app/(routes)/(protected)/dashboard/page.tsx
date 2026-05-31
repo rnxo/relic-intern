@@ -8,21 +8,21 @@ import { Loader2 } from "lucide-react";
 
 export default function DashBoardPage() {
     return (
-        <div className="flex w-full min-h-screen bg-[#1a1b26] transition-all duration-300">
-            {/* Control Panel / Pet Section (Left) */}
-            <aside className="w-112.5 border-r border-[#414868]/30 overflow-y-auto hidden lg:block">
+        <div className="flex w-full min-h-screen bg-lumi-base transition-all duration-300">
+            {/* ── ペットサイドパネル: デスクトップ(lg以上)のみ表示 ── */}
+            <aside
+                className="w-[280px] xl:w-[300px] border-r border-lumi-border/30 overflow-y-auto hidden lg:flex flex-col"
+                aria-label="ペットステータス"
+            >
                 <Suspense fallback={<LoadingState />}>
-                    <div className="flex flex-col h-full bg-[#1a1b26]">
+                    <div className="flex flex-col min-h-full bg-lumi-base">
                         <PetView />
-                        <div className="px-4 pb-4">
-                            <LumiConsultation />
-                        </div>
                     </div>
                 </Suspense>
             </aside>
 
-            {/* Main Content Area (Right) */}
-            <main className="flex-1 overflow-y-auto">
+            {/* ── メインコンテンツ ── */}
+            <main className="flex-1 overflow-y-auto min-w-0">
                 <Suspense fallback={<LoadingState />}>
                     <HabitCardList />
                 </Suspense>
@@ -33,8 +33,8 @@ export default function DashBoardPage() {
 
 function LoadingState() {
     return (
-        <div className="flex items-center justify-center min-h-screen">
-            <Loader2 className="w-8 h-8 text-[#7aa2f7] animate-spin" />
+        <div className="flex items-center justify-center min-h-[60dvh]">
+            <Loader2 className="w-8 h-8 text-lumi-primary animate-spin" aria-label="読み込み中" />
         </div>
     );
 }
