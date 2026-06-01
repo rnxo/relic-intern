@@ -1,3 +1,4 @@
+import { getAuthUser } from "@/app/lib/auth";
 import type { Habit, NewHabitInput, UpdateHabitInput } from "./habit.type";
 import { createClient } from "@/app/lib/supabase/server";
 
@@ -14,7 +15,7 @@ interface IHabitRepository {
 export const habitRepository: IHabitRepository = {
     getAll: async () => {
         const supabase = await createClient();
-        const { data: { user } } = await supabase.auth.getUser();
+        const user = await getAuthUser();
 
         if(!user) throw new Error("unauthorized user is trying to get some secured data");
 
@@ -39,7 +40,7 @@ export const habitRepository: IHabitRepository = {
     },
     getById: async (id: string) => {
         const supabase = await createClient();
-        const { data: { user } } = await supabase.auth.getUser();
+        const user = await getAuthUser();
 
         if(!user) throw new Error("Unautorized");
 
@@ -56,7 +57,7 @@ export const habitRepository: IHabitRepository = {
     },
     create: async (input: NewHabitInput) => {
         const supabase = await createClient();
-        const { data: { user } } = await supabase.auth.getUser();
+        const user = await getAuthUser();
 
         if(!user) throw new Error("Unauthorized");
 
@@ -79,7 +80,7 @@ export const habitRepository: IHabitRepository = {
     },
     update: async (id: string, input: UpdateHabitInput) => {
         const supabase = await createClient();
-        const { data: { user } } = await supabase.auth.getUser();
+        const user = await getAuthUser();
 
         if(!user) throw new Error("Unauthorized");
 
@@ -97,7 +98,7 @@ export const habitRepository: IHabitRepository = {
     },
     delete: async (id: string) => {
         const supabase = await createClient();
-        const { data: { user } } = await supabase.auth.getUser();
+        const user = await getAuthUser();
 
         if(!user) throw new Error("Unauthorized");
 

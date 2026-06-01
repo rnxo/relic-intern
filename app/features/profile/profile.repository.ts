@@ -1,5 +1,6 @@
 import { createClient } from "@/app/lib/supabase/server";
 import { Profile, UpdateProfileInput } from "./profile.type";
+import { getAuthUser } from "@/app/lib/auth";
 
 interface IProfileRepository {
   get: () => Promise<Profile>;
@@ -32,7 +33,7 @@ const toSnakeCase = (input: UpdateProfileInput): Record<string, unknown> => {
 export const profileRepository: IProfileRepository = {
   get: async () => {
     const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const user = await getAuthUser();
 
     if (!user) throw new Error("Unauthorized");
 
@@ -49,7 +50,7 @@ export const profileRepository: IProfileRepository = {
 
   update: async (input: UpdateProfileInput) => {
     const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const user = await getAuthUser();
 
     if (!user) throw new Error("Unauthorized");
 

@@ -26,7 +26,7 @@ export function PetEmotionStatusCard({ pet }: { pet: Pet }) {
     },
   } as const;
 
-  const currentExpression = expressionConfig["neutral"] ?? expressionConfig.neutral;
+  const currentExpression = expressionConfig[pet.expression as keyof typeof expressionConfig] ?? expressionConfig.neutral;
 
   const barAnimation = (value: number) =>
     prefersReducedMotion
