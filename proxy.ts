@@ -1,6 +1,5 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextRequest, NextResponse } from 'next/server';
-import { getAuthUser } from './app/lib/auth';
 
 // 認証不要の公開ルート
 const PUBLIC_PATHS = ['/', '/login', '/register'];
@@ -27,7 +26,7 @@ export async function proxy(request: NextRequest) {
         },
     })
 
-    const user = await getAuthUser();
+    const { data: { user } } = await supabase.auth.getUser();
 
     const isPublic = PUBLIC_PATHS.some(path =>
         request.nextUrl.pathname === path ||

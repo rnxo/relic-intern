@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Lumi — 感情を持つペットと習慣を育てよう",
+    name: "Lumi",
     short_name: "Lumi",
     description:
       "習慣を育てるたびに、ペットが育つ。あなたの努力をLumiが感じ取ります。",
