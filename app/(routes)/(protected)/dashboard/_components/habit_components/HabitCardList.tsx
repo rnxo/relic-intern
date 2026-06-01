@@ -4,9 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Plus, LogOut } from "lucide-react";
 import { HabitGroup } from "./HabitGroup";
 import { signout } from "@/app/auth/actions";
-import { Suspense, useState } from "react";
+import { Suspense } from "react";
 import PetView from "../PetView";
-import LumiConsultation from "../LumiConsultation";
 
 export default function HabitCardList() {
     const { habits } = useHabits();
@@ -51,11 +50,11 @@ export default function HabitCardList() {
                         </p>
                     </div>
 
-                    <div className="flex items-center gap-2 flex-shrink-0">
+                    <div className="flex items-center gap-2 shrink-0">
                         {/* 習慣追加ボタン */}
                         <Button
                             onClick={() => router.push("/register-habit")}
-                            className="min-h-[44px] min-w-[44px] bg-lumi-primary hover:bg-lumi-primary-hover text-white font-bold px-3 sm:px-5 rounded-xl shadow-md flex items-center gap-1.5 transition-all duration-200 cursor-pointer"
+                            className="min-h-11 min-w-11 bg-lumi-primary hover:bg-lumi-primary-hover text-white font-bold px-3 sm:px-5 rounded-xl shadow-md flex items-center gap-1.5 transition-all duration-200 cursor-pointer"
                             aria-label="習慣を追加する"
                         >
                             <Plus size={18} aria-hidden="true" />
@@ -66,7 +65,7 @@ export default function HabitCardList() {
                         <Button
                             variant="ghost"
                             onClick={handleSignOut}
-                            className="min-h-[44px] min-w-[44px] text-lumi-muted hover:text-lumi-fg hover:bg-lumi-surface px-3 rounded-xl transition-all duration-200 cursor-pointer"
+                            className="min-h-11 min-w-11 text-lumi-muted hover:text-lumi-fg hover:bg-lumi-surface px-3 rounded-xl transition-all duration-200 cursor-pointer"
                             aria-label="サインアウト"
                         >
                             <LogOut size={18} aria-hidden="true" />
@@ -90,7 +89,7 @@ export default function HabitCardList() {
                         <p className="text-lumi-muted text-base">習慣がまだ登録されていません</p>
                         <Button
                             onClick={() => router.push("/register-habit")}
-                            className="min-h-[44px] bg-lumi-primary hover:bg-lumi-primary-hover text-white font-bold px-6 rounded-xl transition-all duration-200 cursor-pointer"
+                            className="min-h-11 bg-lumi-primary hover:bg-lumi-primary-hover text-white font-bold px-6 rounded-xl transition-all duration-200 cursor-pointer"
                         >
                             <Plus size={18} className="mr-2" aria-hidden="true" />
                             最初の習慣を追加する

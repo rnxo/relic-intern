@@ -36,20 +36,6 @@ export async function signup(
   if (error) {
     return { error: error.message };
   }
-
-  if (data.user) {
-    const { error: petError } = await supabase.from("pet").insert({
-      user_id: data.user.id,
-      intimate_level: 1,
-      trust: 0,
-      exhaustion: 0,
-      expression: "neutral",
-    });
-    if (petError) {
-      return { error: petError.message };
-    }
-  }
-
   revalidatePath("/", "layout");
   redirect("/question");
 }

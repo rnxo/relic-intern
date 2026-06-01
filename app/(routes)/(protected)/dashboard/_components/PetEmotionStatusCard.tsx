@@ -42,7 +42,7 @@ export function PetEmotionStatusCard({ pet }: { pet: Pet }) {
       initial={prefersReducedMotion ? false : { opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, ease: "easeOut" as const }}
-      className="w-full max-w-[280px]"
+      className="w-full max-w-70"
     >
       <Card className="w-full bg-lumi-surface/50 backdrop-blur-md border border-lumi-border rounded-3xl overflow-hidden hover:border-lumi-secondary/30 transition-colors duration-300">
         <CardHeader className="pb-3 pt-6 px-6">

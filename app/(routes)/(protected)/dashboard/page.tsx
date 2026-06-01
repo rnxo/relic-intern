@@ -3,7 +3,6 @@
 import { Suspense } from "react";
 import HabitCardList from "./_components/habit_components/HabitCardList";
 import PetView from "./_components/PetView";
-import LumiConsultation from "./_components/LumiConsultation";
 import { Loader2 } from "lucide-react";
 
 export default function DashBoardPage() {
@@ -11,7 +10,7 @@ export default function DashBoardPage() {
         <div className="flex w-full min-h-screen bg-lumi-base transition-all duration-300">
             {/* ── ペットサイドパネル: デスクトップ(lg以上)のみ表示 ── */}
             <aside
-                className="w-[280px] xl:w-[300px] border-r border-lumi-border/30 overflow-y-auto hidden lg:flex flex-col"
+                className="w-70 xl:w-75 border-r border-lumi-border/30 overflow-y-auto hidden lg:flex flex-col"
                 aria-label="ペットステータス"
             >
                 <Suspense fallback={<LoadingState />}>

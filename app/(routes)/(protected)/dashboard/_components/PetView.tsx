@@ -70,7 +70,7 @@ export default function PetView() {
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ delay: 0.2 }}
-        className="w-full max-w-[280px]"
+        className="w-full max-w-70"
       >
         <Card
           className="w-full bg-lumi-surface/50 backdrop-blur-md border border-lumi-border rounded-3xl p-6 hover:border-lumi-primary/30 transition-all"
