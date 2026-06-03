@@ -70,5 +70,6 @@ export const config = {
         '/stats/:path*',
         '/api/:path*',
         '/mypage/:path*',
+        '/habits/:path*',
     ],
 }
