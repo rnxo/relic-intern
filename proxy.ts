@@ -64,5 +64,11 @@ export const config = {
     matcher: [
         // api の除外を削除
         '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+        '/dashboard/:path*',
+        '/calendar/:path*',
+        '/register-habit/:path*',
+        '/stats/:path*',
+        '/api/:path*',
+        '/mypage/:path*',
     ],
 }

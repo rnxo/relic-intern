@@ -6,9 +6,15 @@ import { HabitGroup } from "./HabitGroup";
 import { signout } from "@/app/auth/actions";
 import { Suspense } from "react";
 import PetView from "../PetView";
+import { Habit } from "@/app/features/habit/habit.type";
+import { Pet } from "@/app/features/pet/pet.type";
 
-export default function HabitCardList() {
-    const { habits } = useHabits();
+interface HabitCardListProps {
+    habits: Habit[] | undefined;
+    pet: Pet | null;
+}
+
+export default function HabitCardList( { habits, pet }: HabitCardListProps ) {
     const router = useRouter();
 
     const morningHabits  = habits?.filter(h => h.time_block === 'morning')  || [];
@@ -31,7 +37,7 @@ export default function HabitCardList() {
                 aria-label="ペットステータス"
             >
                 <Suspense fallback={null}>
-                    <PetView />
+                    <PetView pet={pet}/>
                     {/* <div className="px-4 pb-4">
                         <LumiConsultation />
                     </div> */}

@@ -1,24 +1,15 @@
 import { useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
 import { motion, AnimatePresence } from "motion/react";
-import { useHabits } from "@/app/features/habit/habit.state";
-import { Habit } from "@/app/features/habit/habit.type";
 import { PetSvg } from "./PetSvg";
-import { usePet } from "@/app/features/pet/pet.state";
 import { Award } from "lucide-react";
 import { PetEmotionStatusCard } from "./PetEmotionStatusCard";
+import { Pet } from "@/app/features/pet/pet.type";
 
-export default function PetView() {
-  const { habits } = useHabits();
-  const { pet } = usePet();
+
+export default function PetView({ pet }: { pet: Pet | null }) {
   const [hoverExpression, setHoverExpression] = useState<"joy" | "normal" | "sad" | null>(null);
 
   const displayExpression = hoverExpression ?? pet?.expression ?? "normal";
-
-  const todayTotalCompletedHabits: Habit[] =
-    habits?.filter((h) => h.is_completed) || [];
-  const todayTotalHabitsCount: number = todayTotalCompletedHabits?.length || 0;
-
   return (
     <div className="flex flex-col items-center py-8 px-4 space-y-6 bg-lumi-base">
       {/* ペットSVG + グロー */}
@@ -63,33 +54,6 @@ export default function PetView() {
         <span className="font-bold text-sm">
           Level {pet?.intimate_level || 1}
         </span>
-      </motion.div>
-
-      {/* 今日のタスク達成数カード */}
-      <motion.div
-        initial={{ opacity: 0, x: -20 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ delay: 0.2 }}
-        className="w-full max-w-70"
-      >
-        <Card
-          className="w-full bg-lumi-surface/50 backdrop-blur-md border border-lumi-border rounded-3xl p-6 hover:border-lumi-primary/30 transition-all"
-        >
-          <CardContent className="flex flex-col items-center justify-center p-0 space-y-2">
-            <motion.span
-              key={todayTotalHabitsCount}
-              initial={{ scale: 0.5, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              className="text-5xl font-extrabold text-lumi-primary tabular-nums"
-              aria-label={`今日のタスク達成数 ${todayTotalHabitsCount}`}
-            >
-              {todayTotalHabitsCount}
-            </motion.span>
-            <span className="text-sm font-medium text-lumi-muted">
-              今日のタスク達成数
-            </span>
-          </CardContent>
-        </Card>
       </motion.div>
 
       {/* Lumi感情ステータス */}
