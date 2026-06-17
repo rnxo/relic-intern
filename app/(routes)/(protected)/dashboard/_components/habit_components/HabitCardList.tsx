@@ -30,20 +30,6 @@ export default function HabitCardList( { habits, pet }: HabitCardListProps ) {
 
     return (
         <div className="flex flex-col min-h-screen bg-lumi-base">
-
-            {/* ── モバイル専用: ペットセクション (lg以上では非表示) ── */}
-            <section
-                className="lg:hidden border-b border-lumi-border/30"
-                aria-label="ペットステータス"
-            >
-                <Suspense fallback={null}>
-                    <PetView pet={pet}/>
-                    {/* <div className="px-4 pb-4">
-                        <LumiConsultation />
-                    </div> */}
-                </Suspense>
-            </section>
-
             {/* ── ヘッダー ── */}
             <header className="sticky top-0 z-30 bg-lumi-base/90 backdrop-blur-xl border-b border-lumi-border/30 px-4 py-3 sm:px-6 sm:py-4">
                 <div className="flex items-center justify-between gap-3 max-w-3xl mx-auto">

@@ -71,5 +71,6 @@ export const config = {
         '/api/:path*',
         '/mypage/:path*',
         '/habits/:path*',
+        '/consultation-room/:path*',
     ],
 }
