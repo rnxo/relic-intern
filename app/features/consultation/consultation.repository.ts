@@ -9,6 +9,8 @@ interface IConsultationRepository {
   getSessionIdByTitle: (title: string) => Promise<Session["id"]>;
   createSession: (title: string) => Promise<Session>;
   createMessage: (sessionId: string, role: string, content: string) => Promise<Message>;
+  deleteSession: (sessionId: string) => Promise<void>;
+  updateSessionTitle: (sessionId: string, title: string) => Promise<void>;
 }
 
 export const consultationRepository: IConsultationRepository = {
@@ -117,5 +119,41 @@ export const consultationRepository: IConsultationRepository = {
       if(error) throw new Error(error.message);
 
       return data as Message;
-  } 
+  },
+
+  deleteSession: async (sessionId: string): Promise<void> => {
+    const supabase = await createClient();
+    const user = await getAuthUser();
+
+    if (!user) throw new Error("Unauthorized");
+
+    await supabase
+      .from("message")
+      .delete()
+      .eq("session_id", sessionId)
+      .eq("user_id", user.id);
+
+    const { error } = await supabase
+      .from("session")
+      .delete()
+      .eq("user_id", user.id)
+      .eq("id", sessionId);
+
+    if (error) throw new Error(error.message);
+  },
+
+  updateSessionTitle: async (sessionId: string, title: string): Promise<void> => {
+    const supabase = await createClient();
+    const user = await getAuthUser();
+
+    if (!user) throw new Error("Unauthorized");
+
+    const { error } = await supabase
+      .from("session")
+      .update({ title })
+      .eq("user_id", user.id)
+      .eq("id", sessionId);
+
+    if (error) throw new Error(error.message);
+  },
 }

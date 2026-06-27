@@ -21,6 +21,15 @@ async function sendMessageToLumi(sessionId: string, userContent: string): Promis
   return lumiMessage;
 }
 
+// C-05: ユーザーの最初のメッセージからセッションタイトルを自動生成
+async function generateSessionTitle(userContent: string): Promise<string> {
+  const result = await genAI.models.generateContent({
+    model: "gemini-2.5-flash",
+    contents: `次のメッセージを元に、相談セッションのタイトルを10文字以内の日本語で生成してください。タイトルのみを返してください。\n\n「${userContent}」`,
+  });
+  return (result.text ?? "相談セッション").trim().slice(0, 10);
+}
+
 export const consultationService = {
   getChatRoom: async (sessionTitle: string): Promise<ChatRoom> => {
     const sessionId = await consultationRepository.getSessionIdByTitle(sessionTitle);
@@ -47,13 +56,21 @@ export const consultationService = {
 
   sendMessage: sendMessageToLumi,
 
+  // C-05: セッション作成 + 初回メッセージ送信 + タイトル自動生成
   initiateSession: async (title: string, userContent: string): Promise<string> => {
     const session = await consultationRepository.createSession(title);
     await sendMessageToLumi(session.id, userContent);
+    const aiTitle = await generateSessionTitle(userContent);
+    await consultationRepository.updateSessionTitle(session.id, aiTitle);
     return session.id;
   },
 
   getAllSessions: async () => {
     return consultationRepository.getAllSessions();
+  },
+
+  // C-06: セッション削除（関連メッセージも含む）
+  deleteSession: async (sessionId: string): Promise<void> => {
+    return consultationRepository.deleteSession(sessionId);
   },
 };

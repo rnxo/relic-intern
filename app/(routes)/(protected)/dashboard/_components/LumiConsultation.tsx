@@ -38,7 +38,7 @@ export function LumiConsultation() {
       if (!res.ok) throw new Error("failed to initiate consultation");
 
       const { sessionId } = await res.json();
-      router.push(`/consultation-room/${sessionId}`);
+      router.push(`/consultation-room?sessionId=${sessionId}`);
     } catch (err) {
       console.error(err);
       setIsPending(false);

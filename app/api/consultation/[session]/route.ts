@@ -29,3 +29,17 @@ export async function POST(
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }
+
+export async function DELETE(
+  _req: NextRequest,
+  { params }: { params: Promise<{ session: string }> }
+) {
+  try {
+    const { session: sessionId } = await params;
+    await consultationService.deleteSession(sessionId);
+    return NextResponse.json({ message: "success" });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unknown error";
+    return NextResponse.json({ error: message }, { status: 500 });
+  }
+}

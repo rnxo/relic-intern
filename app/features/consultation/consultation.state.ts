@@ -1,7 +1,36 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { ChatRoom } from "./consultation.type";
+import { ChatRoom, Session } from "./consultation.type";
 
 export const consultationQueryKey = ["consultation"] as const;
+export const sessionsQueryKey = ["sessions"] as const;
+
+const fetchSessions = async (): Promise<Session[]> => {
+  const res = await fetch("/api/consultation");
+  if (!res.ok) throw new Error("failed to fetch sessions");
+  return res.json();
+};
+
+export const useSessionsQuery = (options?: { initialData?: Session[] }) => {
+  return useQuery({
+    queryKey: sessionsQueryKey,
+    queryFn: fetchSessions,
+    initialData: options?.initialData,
+    staleTime: 1000 * 30,
+  });
+};
+
+export const useDeleteSessionMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (sessionId: string) => {
+      const res = await fetch(`/api/consultation/${sessionId}`, { method: "DELETE" });
+      if (!res.ok) throw new Error("failed to delete session");
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: sessionsQueryKey });
+    },
+  });
+};
 
 const fetchChatRoom = async (sessionId: string): Promise<ChatRoom> => {
   const res = await fetch(`/api/consultation/${sessionId}`);

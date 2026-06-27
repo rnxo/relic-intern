@@ -20,8 +20,8 @@ export type Message = {
 export type Session = {
   id: string;
   title: string;
-  createdAt: string;
-  updatedAt: string;
+  created_at: string;
+  updated_at: string;
 }
 
 export type ChatRoom = Session & {
