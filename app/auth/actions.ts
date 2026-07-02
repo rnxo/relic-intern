@@ -53,3 +53,11 @@ export async function signout() {
   revalidatePath("/", "layout");
   redirect("/login");
 }
+
+export async function loginAsGuest(): Promise<{ error: string } | never > {
+  const supabase = await createClient();
+  const { error } = await supabase.auth.signInAnonymously();
+  if (error) return { error: error.message };
+  revalidatePath("/", "layout");
+  redirect("/dashboard");
+}
