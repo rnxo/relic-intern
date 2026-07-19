@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  pull_request:              # 全PRで発火（マージ前ゲート）
+  push:
+    branches: [main]         # main への push（マージ後）で最終確認
+
+# 同一ブランチ/PRで新しい push があれば、進行中の古い実行をキャンセル（CI消費節約）
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    name: Lint / Typecheck / Test / Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22    # Vercelデフォルト・Next.js 16対応
+          cache: npm          # package-lock.json ベースで依存をキャッシュ
+
+      - name: Install dependencies
+        run: npm ci           # lockファイル準拠のクリーンインストール
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck
+        run: npm run tsc
+
+      - name: Test
+        run: npm test
+
+      - name: Build
+        run: npm run build
+        env:                  # NEXT_PUBLIC_* は公開値。ビルドを確実に通すため Secrets から注入
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}

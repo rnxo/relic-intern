@@ -20,11 +20,14 @@ export default function PetView({ pet }: { pet: Pet | null }) {
         transition={{ duration: 0.8, ease: "easeOut" }}
         onHoverStart={() => setHoverExpression("joy")}
         onHoverEnd={() => setHoverExpression(null)}
+        onTapStart={() => setHoverExpression("joy")}
+        onTap={() => setHoverExpression(null)}
+        onTapCancel={() => setHoverExpression(null)}
         role="img"
         aria-label={`Lumiのペット — 表情: ${displayExpression}`}
       >
         <div
-          className="absolute -inset-4 rounded-full blur-xl opacity-0 group-hover:opacity-20 transition-opacity duration-500"
+          className="absolute -inset-4 rounded-full blur-xl opacity-0 group-hover:opacity-20 group-active:opacity-20 transition-opacity duration-500"
           style={{
             background: "linear-gradient(to right, var(--lumi-primary), var(--lumi-primary-hover))",
           }}

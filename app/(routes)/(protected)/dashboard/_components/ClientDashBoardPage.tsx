@@ -8,8 +8,7 @@ import { Habit } from "@/app/features/habit/habit.type";
 import { Pet } from "@/app/features/pet/pet.type";
 import { useHabitsQuery } from "@/app/features/habit/habit.state";
 import { usePetQuery } from "@/app/features/pet/pet.state";
-import { Sparkle } from "lucide-react";
-import { DashBoardHeader } from "./DashBoardHeader";
+import { Header } from "./Header";
 
 interface ClientDashBoardPageProps {
   initHabits: Habit[];
@@ -25,21 +24,21 @@ export default function ClientDashBoardPage({
 
   return (
     <div className="flex flex-col w-full min-h-screen bg-lumi-base transition-all duration-300">
-        <DashBoardHeader />
+      <Header />
       {/* ── メインコンテンツ ── */}
       <main className="flex-1 overflow-y-auto min-w-0">
-        {/* ── モバイル専用: ペットセクション (lg以上では非表示) ── */}
+        {/* ── ペットセクション ── */}
         <section
           className="border-b border-lumi-border/30"
           aria-label="ペットステータス"
         >
           <Suspense fallback={<LoadingState />}>
             <PetView pet={pet ?? null} />
-            {/* <div className="px-4 pb-4">
-                        <LumiConsultation />
-                    </div> */}
           </Suspense>
         </section>
+
+        {/* ── 習慣リスト ── */}
+        <HabitCardList habits={habits} />
       </main>
     </div>
   );

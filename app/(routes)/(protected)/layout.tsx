@@ -1,6 +1,7 @@
 import { profileService } from "@/app/features/profile/profile.service";
 import Sidebar from "./_components/Sidebar";
 import JotaiHydrator from "./_components/JotaiHydrator";
+import { Analytics } from "@vercel/analytics/next";
 
 export default async function PagesLayout({
   children,
@@ -18,9 +19,10 @@ export default async function PagesLayout({
       {/* モバイル: サイドバーは非表示（ボトムナビ）なので余白なし
           lg以上: 左サイドバー(w-20)分だけ本文をずらす */}
       <JotaiHydrator profile={profile}>
-        <div className="lg:ml-20 pb-16 lg:pb-0">
+        <body className="lg:ml-20 pb-16 lg:pb-0">
           {children}
-        </div>
+          <Analytics />
+        </body>
       </JotaiHydrator>
     </div>
   );

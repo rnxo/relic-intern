@@ -46,3 +46,7 @@ next-env.d.ts
 .agents
 
 CLAUDE.md
+
+#task
+/tasks
+.task.md

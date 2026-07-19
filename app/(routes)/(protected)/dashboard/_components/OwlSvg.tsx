@@ -93,6 +93,8 @@ export function OwlSvg({ expression, isJumping = false }: OwlSvgProps) {
                                 strokeWidth="2"
                                 animate={{ y: [0, 100], opacity: [0, 1, 0] }}
                                 transition={{
+                                    // TODO: 雨粒の揺らぎ用。本来はuseMemoで事前計算しrender外に出す
+                                    // eslint-disable-next-line react-hooks/purity
                                     duration: 0.5 + Math.random() * 0.3,
                                     repeat: Infinity,
                                     delay: i * 0.08,

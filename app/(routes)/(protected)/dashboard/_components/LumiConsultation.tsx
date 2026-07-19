@@ -48,7 +48,7 @@ export function LumiConsultation() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline">
+        <Button variant="outline" aria-label="Lumi分析相談室">
           <Sparkle size={24} className="text-center text-lumi-secondary" />
         </Button>
       </DialogTrigger>

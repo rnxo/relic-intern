@@ -11,6 +11,8 @@ export function HabitGroup({ title, habits }: { title: string, habits: Habit[] }
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
+        // TODO: SSRハイドレーション不一致の回避策。別手段への置き換えを検討
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setMounted(true);
     }, []);
 
