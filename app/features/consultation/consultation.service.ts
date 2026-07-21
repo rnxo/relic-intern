@@ -1,13 +1,13 @@
 import { consultationRepository } from "./consultation.repository";
 import { ChatRoom, Message } from "./consultation.type";
-import { genAI } from "@/app/lib/gemini";
+import { getGenAI } from "@/app/lib/gemini";
 import { LUMI_SYSTEM_PROMPT, buildPrompt } from "./consultation.prompt";
 
 async function sendMessageToLumi(sessionId: string, userContent: string): Promise<Message> {
   const prevMessages = await consultationRepository.getMessageBySession(sessionId);
   const prompt = buildPrompt(prevMessages, userContent);
 
-  const result = await genAI.models.generateContent({
+  const result = await getGenAI().models.generateContent({
     model: "gemini-2.5-flash",
     contents: prompt,
     config: { systemInstruction: LUMI_SYSTEM_PROMPT },
@@ -23,7 +23,7 @@ async function sendMessageToLumi(sessionId: string, userContent: string): Promis
 
 // C-05: ユーザーの最初のメッセージからセッションタイトルを自動生成
 async function generateSessionTitle(userContent: string): Promise<string> {
-  const result = await genAI.models.generateContent({
+  const result = await getGenAI().models.generateContent({
     model: "gemini-2.5-flash",
     contents: `次のメッセージを元に、相談セッションのタイトルを10文字以内の日本語で生成してください。タイトルのみを返してください。\n\n「${userContent}」`,
   });

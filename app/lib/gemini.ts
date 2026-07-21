@@ -1,7 +1,12 @@
 import { GoogleGenAI } from "@google/genai";
 
-const apiKey = process.env.GEMINI_API_KEY;
+let genAIInstance: GoogleGenAI | null = null;
 
-if(!apiKey) throw new Error("ai api key is not found");
-
-export const genAI = new GoogleGenAI({apiKey});
+export function getGenAI(): GoogleGenAI {
+  if (!genAIInstance) {
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) throw new Error("ai api key is not found");
+    genAIInstance = new GoogleGenAI({ apiKey });
+  }
+  return genAIInstance;
+}
