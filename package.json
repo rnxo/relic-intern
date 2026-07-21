@@ -9,7 +9,10 @@
     "lint": "eslint",
     "tsc": "tsc --noEmit",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "format": "prettier --write .",
+    "format:file": "prettier --write",
+    "format:changed": "git diff --name-only --diff-filter=ACMR HEAD | grep -E '\\.(ts|tsx|css|json|md)$' | xargs -r prettier --write"
   },
   "dependencies": {
     "@google/genai": "^1.43.0",
@@ -35,6 +38,8 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.1.6",
+    "prettier": "^3.9.5",
+    "prettier-plugin-tailwindcss": "^0.8.1",
     "shadcn": "^3.8.4",
     "supabase": "^2.98.0",
     "tailwindcss": "^4",
