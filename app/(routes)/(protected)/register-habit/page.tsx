@@ -23,7 +23,7 @@ import { DurationSelectorFiled } from "./_components/DurationSelectorField";
 function RegisterHabitContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const habitId = searchParams.get("habitId");
+  const habitId = searchParams.get("habitId"); //編集モードの場合、URLにhabitIdを付与
 
   const { habits, addNewHabit, updateHabit } = useHabits();
   const editingHabit = habitId ? habits.find((h) => h.id === habitId) : undefined;
@@ -84,7 +84,7 @@ function RegisterHabitContent() {
         <Button
           variant="ghost"
           onClick={() => router.push("/dashboard")}
-          className="min-h-[44px] text-lumi-muted hover:text-lumi-fg hover:bg-lumi-surface gap-2 rounded-xl cursor-pointer transition-all duration-200"
+          className="min-h-11 text-lumi-muted hover:text-lumi-fg hover:bg-lumi-surface gap-2 rounded-xl cursor-pointer transition-all duration-200"
           aria-label="ダッシュボードに戻る"
         >
           <ChevronLeft size={20} aria-hidden="true" />
@@ -211,7 +211,7 @@ function RegisterHabitContent() {
                 <Button
                   type="submit"
                   disabled={isSubmitting || !input.title.trim()}
-                  className="w-full min-h-[56px] bg-lumi-primary hover:bg-lumi-primary-hover text-white font-black text-base rounded-2xl shadow-xl flex items-center justify-center gap-3 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                  className="w-full min-h-14 bg-lumi-primary hover:bg-lumi-primary-hover text-white font-black text-base rounded-2xl shadow-xl flex items-center justify-center gap-3 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                   aria-label={isEditMode ? "変更を保存する" : "習慣を登録する"}
                 >
                   {isSubmitting ? (

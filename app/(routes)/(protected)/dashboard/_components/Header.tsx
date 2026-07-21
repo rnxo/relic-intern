@@ -1,6 +1,7 @@
 import { AlertSignoutDialog } from "./AlertSignoutDialog";
 import { AddNewHabitButton } from "./AddNewHabitButton";
 import { LumiBrandLogo } from "./LumiBrandLogo";
+import { LumiConsultation } from "./LumiConsultation";
 
 export function Header() {
   return (
@@ -9,6 +10,7 @@ export function Header() {
         <LumiBrandLogo />
 
         <div className="flex items-center gap-2 shrink-0">
+          <LumiConsultation />
           <AddNewHabitButton />
           <AlertSignoutDialog />
         </div>

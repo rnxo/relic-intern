@@ -5,7 +5,7 @@ import type { Pet } from "@/app/features/pet/pet.type";
 
 export const habitQueryKey = ["habits"] as const;
 
-export const useHabitsQuery = () => {
+export const useHabitsQuery = (options?: { initialData? : Habit[] }) => {
     return useQuery({
         queryKey: habitQueryKey,
         queryFn: async (): Promise<Habit[]> => {
@@ -13,6 +13,7 @@ export const useHabitsQuery = () => {
             if (!res.ok) throw new Error("Failed to fetch habits");
             return res.json() as Promise<Habit[]>;
         },
+        initialData: options?.initialData,
         refetchOnWindowFocus: true,
         staleTime: 0,
     });

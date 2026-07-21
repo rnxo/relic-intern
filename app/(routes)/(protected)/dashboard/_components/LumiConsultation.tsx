@@ -1,35 +1,87 @@
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Brain, Sparkles } from "lucide-react";
+"use client";
 
-export default function LumiConsultation() {
-    return (
-        <Card className="w-full bg-lumi-surface/50 backdrop-blur-md border-lumi-border text-lumi-fg overflow-hidden rounded-3xl">
-            <CardHeader className="border-b border-lumi-border/50 pb-4">
-                <CardTitle className="flex items-center gap-2 text-base">
-                    <Brain className="text-lumi-secondary shrink-0" size={18} aria-hidden="true" />
-                    <span className="text-lumi-fg">Lumi の分析相談室</span>
-                    <span className="ml-auto text-[10px] font-semibold px-2 py-0.5 rounded-full bg-lumi-secondary/20 text-lumi-secondary border border-lumi-secondary/30 whitespace-nowrap">
-                        近日公開
-                    </span>
-                </CardTitle>
-            </CardHeader>
-            <CardContent className="pt-5 space-y-4">
-                <div className="text-center space-y-4 py-2">
-                    <p className="text-sm text-lumi-muted leading-relaxed">
-                        きみの行動ログをスキャンして、<br />
-                        最適な習慣を導き出すよ。
-                    </p>
-                    <Button
-                        disabled
-                        className="bg-linear-to-r from-lumi-secondary to-lumi-primary text-white rounded-full px-8 py-5 h-auto font-bold shadow-lg opacity-40 cursor-not-allowed"
-                        aria-label="ライフパターンを分析する（近日公開）"
-                    >
-                        <Sparkles className="mr-2 h-4 w-4" aria-hidden="true" />
-                        ライフパターンを分析
-                    </Button>
-                </div>
-            </CardContent>
-        </Card>
-    );
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Field } from "@/components/ui/field";
+import { Textarea } from "@/components/ui/textarea";
+import { Sparkle } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+
+export function LumiConsultation() {
+  const router = useRouter();
+  const [input, setInput] = useState<string>("");
+  const [isPending, setIsPending] = useState<boolean>(false);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!input.trim() || isPending) return;
+
+    setIsPending(true);
+    try {
+      const title = `相談_${new Date().toLocaleDateString("ja-JP")}`;
+      const res = await fetch("/api/consultation", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title, content: input.trim() }),
+      });
+      console.log(res.json());
+      if (!res.ok) throw new Error("failed to initiate consultation");
+
+      const { sessionId } = await res.json();
+      router.push(`/consultation-room?sessionId=${sessionId}`);
+    } catch (err) {
+      console.error(err);
+      setIsPending(false);
+    }
+  };
+
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button variant="outline" aria-label="Lumi分析相談室">
+          <Sparkle size={24} className="text-center text-lumi-secondary" />
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-sm bg-lumi-base/90 backdrop-blur-xl border border-lumi-border/30 rounded-lg">
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <DialogHeader>
+            <DialogTitle>Lumi分析相談室へようこそ</DialogTitle>
+            <DialogDescription>
+              Lumi分析相談室は、Lumiに関する質問や相談を行うためのスペースです。お気軽にご利用ください。
+            </DialogDescription>
+          </DialogHeader>
+          <Field>
+            <Textarea
+              placeholder="今日仕事でへとへと"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              disabled={isPending}
+            />
+          </Field>
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button variant="outline" disabled={isPending}>戻る</Button>
+            </DialogClose>
+            <Button
+              type="submit"
+              className="bg-lumi-primary"
+              disabled={isPending || !input.trim()}
+            >
+              {isPending ? "相談中..." : "相談"}
+            </Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
+  );
 }

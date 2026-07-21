@@ -3,7 +3,7 @@ import type { Pet, UpdatePetType } from "./pet.type";
 
 export const petQueryKey = ["pet"] as const;
 
-export const usePetQuery = () => {
+export const usePetQuery = (options? : { initialData: Pet }) => {
     return useQuery({
         queryKey: petQueryKey,
         queryFn: async (): Promise<Pet | null> => {
@@ -11,6 +11,7 @@ export const usePetQuery = () => {
             if (!res.ok) return null;
             return res.json() as Promise<Pet>;
         },
+        initialData: options?.initialData,
     });
 };
 
