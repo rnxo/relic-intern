@@ -54,4 +54,9 @@ export async function signout() {
   redirect("/login");
 }
 
-
+//未完成
+export async function sendResetPasswordEmail(email: string) {
+  const supabase = await createClient();
+  const { data, error } = await supabase.auth.resetPasswordForEmail(email);
+  return { data };
+}

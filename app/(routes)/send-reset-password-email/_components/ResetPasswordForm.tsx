@@ -5,6 +5,7 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence } from 'motion/react';
 import FocusInput from './FocusInput';
+import { sendResetPasswordEmail } from '@/app/auth/actions';
 
 type ResetErrors = { email?: string };
 
@@ -37,19 +38,16 @@ export default function ResetPasswordForm({
     if (errors.email) setErrors({});
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const next = validateResetEmail(email);
     setErrors(next);
     if (Object.keys(next).length > 0) return;
 
     setLoading(true);
-    // NOTE: パスワードリセットメール送信の実処理（Supabase連携）は後日別タスクで実装予定。
-    // 現時点ではUI状態（loading → success）確認のためのダミー処理。
-    window.setTimeout(() => {
-      setLoading(false);
-      onSuccess(email.trim());
-    }, 900);
+    const { data } = await sendResetPasswordEmail(email);
+    console.log(JSON.stringify(data, null, 2));
+    setLoading(false);
   };
 
   const labelClass =
