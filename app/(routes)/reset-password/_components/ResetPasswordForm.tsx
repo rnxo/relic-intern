@@ -69,7 +69,7 @@ export default function ResetPasswordForm({
           placeholder="you@example.com"
           onChange={handleChange}
           reduced={reduced}
-          hasError={!!errors.email}
+          variant={errors.email ? 'error' : 'default'}
         />
         <AnimatePresence>
           {errors.email && (
