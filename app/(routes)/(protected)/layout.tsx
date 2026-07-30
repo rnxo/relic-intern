@@ -19,10 +19,10 @@ export default async function PagesLayout({
       {/* モバイル: サイドバーは非表示（ボトムナビ）なので余白なし
           lg以上: 左サイドバー(w-20)分だけ本文をずらす */}
       <JotaiHydrator profile={profile}>
-        <body className="lg:ml-20 pb-16 lg:pb-0">
+        <div className="lg:ml-20 pb-16 lg:pb-0">
           {children}
           <Analytics />
-        </body>
+        </div>
       </JotaiHydrator>
     </div>
   );

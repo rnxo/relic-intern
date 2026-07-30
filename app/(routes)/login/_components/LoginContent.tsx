@@ -732,7 +732,7 @@ export default function LoginContent() {
               className="flex justify-between mt-5 text-[0.73rem]"
             >
               <Link
-                href="/reset-password"
+                href="/send-reset-password-email"
                 className="text-lumi-primary/60 transition-all duration-200 hover:text-lumi-primary/90 hover:underline underline-offset-2"
               >
                 パスワードをお忘れですか？

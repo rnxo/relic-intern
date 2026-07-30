@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence } from 'motion/react';
 import FocusInput from './FocusInput';
 import { sendResetPasswordEmail } from '@/app/auth/actions';
+import { translateAuthError } from '@/app/lib/authValidation';
 
 type ResetErrors = { email?: string };
 
@@ -30,12 +31,14 @@ export default function ResetPasswordForm({
 }) {
   const [email, setEmail] = useState('');
   const [errors, setErrors] = useState<ResetErrors>({});
+  const [serverError, setServerError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const emailId = useId();
 
   const handleChange = (value: string) => {
     setEmail(value);
     if (errors.email) setErrors({});
+    if (serverError) setServerError(null);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -45,9 +48,15 @@ export default function ResetPasswordForm({
     if (Object.keys(next).length > 0) return;
 
     setLoading(true);
-    const { data } = await sendResetPasswordEmail(email);
-    console.log(JSON.stringify(data, null, 2));
+    setServerError(null);
+    const { error } = await sendResetPasswordEmail(email);
     setLoading(false);
+
+    if (error) {
+      setServerError(error);
+      return;
+    }
+    onSuccess(email);
   };
 
   const labelClass =
@@ -85,6 +94,29 @@ export default function ResetPasswordForm({
           )}
         </AnimatePresence>
       </div>
+
+      <AnimatePresence>
+        {serverError && (
+          <motion.div
+            role="alert"
+            className="flex items-start gap-2.5 rounded-xl px-4 py-3 text-[0.8rem]"
+            initial={{ opacity: 0, y: -6 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -6 }}
+            transition={{ duration: 0.2 }}
+            style={{
+              background: 'color-mix(in srgb, #ef4444 10%, transparent)',
+              border: '1px solid color-mix(in srgb, #ef4444 28%, transparent)',
+              color: 'color-mix(in srgb, #ef4444 88%, white)',
+            }}
+          >
+            <span className="mt-px select-none" aria-hidden="true">
+              ⚠
+            </span>
+            <span>{translateAuthError(serverError)}</span>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <div className="relative mt-2 overflow-hidden rounded-xl">
         <Button
