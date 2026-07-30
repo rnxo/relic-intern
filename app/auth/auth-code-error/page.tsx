@@ -1,5 +1,6 @@
 import Link from 'next/link';
 
+//有効期限が切れたときのエラーページ
 export default function AuthCodeErrorPage() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-lumi-base p-4">
