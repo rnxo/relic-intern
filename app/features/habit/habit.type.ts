@@ -15,7 +15,8 @@ export type Habit = {
     time_block: TimeBlock;
     target_days: string;
     streak_days: number;
-    is_completed: boolean;
+    is_completed: boolean; //目標日数到達フラグ
+    is_checked: boolean; //チェックずみフラグ
     duration?: string;
     type?: string;
     heaviness?: number;

@@ -36,7 +36,7 @@ export async function PATCH(
 ) {
   const { id } = await params;
   try {
-    const data = await habitService.complete(id);
+    const data = await habitService.check(id);
     return NextResponse.json({ message: "success to patch habit data", data });
   } catch (error) {
     return NextResponse.json({ message: error instanceof Error ? error.message : String(error) }, { status: 500 });

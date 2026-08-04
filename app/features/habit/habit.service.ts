@@ -55,15 +55,15 @@ export const habitService = {
     await habitRepository.update(id, newHabitInput),
   delete: async (id: string) => await habitRepository.delete(id),
 
-  complete: async (id: string) => {
+  check: async (id: string) => {
     try {
       const targetHabit = await habitRepository.getById(id);
       const now = new Date();
       const todayStr = now.toISOString().split("T")[0];
-      const isCompleting = !targetHabit.is_completed;
+      const isChecking = !targetHabit.is_checked;
 
       const newStreakDays = getStreakDays(
-        isCompleting,
+        isChecking,
         targetHabit.streak_days,
         targetHabit.completed_at,
         todayStr,
@@ -78,8 +78,8 @@ export const habitService = {
       await petRepository.update(updatedPet);
 
       const completedHabit: UpdateHabitInput = {
-        is_completed: isCompleting,
-        completed_at: isCompleting ? now.toISOString() : targetHabit.completed_at,
+        is_checked: isChecking,
+        completed_at: isChecking ? now.toISOString() : targetHabit.completed_at,
         streak_days: newStreakDays,
         updated_at: now.toISOString(),
       };

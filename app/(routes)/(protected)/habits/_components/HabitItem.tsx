@@ -18,7 +18,7 @@ const getDurationColorClass = (duration: string | undefined): string => {
 };
 
 export function HabitItem({ habit }: { habit: Habit }) {
-  const { deleteHabit, completeHabit } = useHabits();
+  const { deleteHabit, checkHabit } = useHabits();
   const router = useRouter();
 
   const createdAtDate = habit.created_at
@@ -31,7 +31,7 @@ export function HabitItem({ habit }: { habit: Habit }) {
   return (
     <Card
       className={`group relative w-full transition-all duration-300 ${
-        habit.is_completed
+        habit.is_checked
           ? "bg-lumi-surface/20 opacity-70"
           : "bg-lumi-surface/40"
       } backdrop-blur-sm border border-lumi-border rounded-2xl hover:border-lumi-primary/50`}
@@ -41,11 +41,11 @@ export function HabitItem({ habit }: { habit: Habit }) {
         <div className="flex items-center gap-3">
           {/* チェックボタン */}
           <button
-            onClick={() => completeHabit(habit.id)}
+            onClick={() => checkHabit(habit.id)}
             className="relative shrink-0 min-h-11 min-w-11 flex items-center justify-center hover:scale-110 transition-transform focus:outline-none focus-visible:ring-2 focus-visible:ring-lumi-primary rounded-full cursor-pointer"
-            aria-pressed={habit.is_completed}
+            aria-pressed={habit.is_checked}
           >
-            {habit.is_completed ? (
+            {habit.is_checked ? (
               <CheckCircle2
                 size={28}
                 className="text-lumi-primary"
@@ -64,7 +64,7 @@ export function HabitItem({ habit }: { habit: Habit }) {
           <div className="flex-1 min-w-0 space-y-1">
             <p
               className={`text-sm sm:text-base font-bold leading-tight transition-colors ${
-                habit.is_completed
+                habit.is_checked
                   ? "text-lumi-muted line-through"
                   : "text-lumi-fg group-hover:text-lumi-primary-hover"
               }`}

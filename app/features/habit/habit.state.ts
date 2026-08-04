@@ -65,7 +65,7 @@ export const useHabits = () => {
         },
     });
 
-    const completeMutation = useMutation({
+    const checkMutation = useMutation({
         mutationFn: async (id: string) => {
             const res = await fetch(`/api/habit/${id}`, { method: "PATCH" });
             if (!res.ok) throw new Error("Failed to complete habit");
@@ -74,7 +74,7 @@ export const useHabits = () => {
         },
         onSuccess: (data) => {
             queryClient.invalidateQueries({ queryKey: habitQueryKey });
-            if (data.is_completed) {
+            if (data.is_checked) {
                 // 完了時のjoy表現アニメーション（3秒間）
                 queryClient.setQueryData(petQueryKey, (prev: Pet | null | undefined) =>
                     prev ? { ...prev, expression: "joy" as const } : prev
@@ -91,7 +91,7 @@ export const useHabits = () => {
     const addNewHabit = (input: NewHabitInput) => addMutation.mutateAsync(input);
     const deleteHabit = (id: string) => deleteMutation.mutateAsync(id);
     const updateHabit = (id: string, input: Partial<Habit>) => updateMutation.mutateAsync({ id, input });
-    const completeHabit = (id: string) => completeMutation.mutateAsync(id);
+    const checkHabit = (id: string) => checkMutation.mutateAsync(id);
 
-    return { habits, addNewHabit, deleteHabit, updateHabit, completeHabit };
+    return { habits, addNewHabit, deleteHabit, updateHabit, checkHabit };
 };
