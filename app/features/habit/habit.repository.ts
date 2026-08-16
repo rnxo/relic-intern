@@ -27,7 +27,7 @@ export const habitRepository: IHabitRepository = {
             .update({ is_checked: false })
             .eq('user_id', user.id)
             .eq('is_checked', true)
-            .lt('completed_at', todayStr);
+            .lt('checked_at', todayStr);
 
         if(resetError) throw new Error(resetError.message);
 
@@ -57,7 +57,6 @@ export const habitRepository: IHabitRepository = {
                 if(idsToComplete.includes(h.id)) h.is_completed = true;
             });
         }
-
         return habits;
     },
     getById: async (id: string) => {

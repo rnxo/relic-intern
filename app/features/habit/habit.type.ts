@@ -15,19 +15,21 @@ export type Habit = {
     time_block: TimeBlock;
     target_days: string;
     streak_days: number;
+    elasped_days: number; //作成日から経過日数
     is_completed: boolean; //目標日数到達フラグ
     is_checked: boolean; //チェックずみフラグ
     duration?: string;
     type?: string;
     heaviness?: number;
-    completed_at: string;
+    checked_at: string; //実行フラグ
+    completed_at: string; //完了フラグ
     created_at: string;
     updated_at: string;
 }
 
 
 export type NewHabitInput = Pick<Habit, 'title' | 'time_block' | 'target_days' | 'type' | 'heaviness' | 'duration'>
-export type UpdateHabitInput = Partial<Omit<Habit, 'id' | 'user_id' | 'created_at'>>
+export type UpdateHabitInput = Partial<Omit<Habit, 'id' | 'user_id' | 'created_at' | 'elasped_days'>>
 /*
 To: simaao
 Pickユティリティ型を使用すると以下の型と同義である

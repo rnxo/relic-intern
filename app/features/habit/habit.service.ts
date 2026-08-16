@@ -18,11 +18,11 @@ import { UpdatePetType } from "../pet/pet.type";
 const getStreakDays = (
   isCompleting: boolean,
   streakDays: number,
-  completedAt: string,
+  checkedAt: string,
   todayStr: string,
 ): number => {
   if (isCompleting) {
-    const lastDate = completedAt?.split("T")[0] ?? null;
+    const lastDate = checkedAt?.split("T")[0] ?? null;
     if (!lastDate) return 1;
     const diffDays = Math.floor(
       (new Date(todayStr).getTime() - new Date(lastDate).getTime()) /
@@ -30,7 +30,7 @@ const getStreakDays = (
     );
     return diffDays <= 1 ? streakDays + 1 : 1;
   } else {
-    if (completedAt?.split("T")[0] === todayStr) {
+    if (checkedAt?.split("T")[0] === todayStr) {
       return Math.max(0, streakDays - 1);
     }
     return streakDays;
@@ -65,7 +65,7 @@ export const habitService = {
       const newStreakDays = getStreakDays(
         isChecking,
         targetHabit.streak_days,
-        targetHabit.completed_at,
+        targetHabit.checked_at,
         todayStr,
       );
 
@@ -77,14 +77,14 @@ export const habitService = {
 
       await petRepository.update(updatedPet);
 
-      const completedHabit: UpdateHabitInput = {
+      const checkedHabit: UpdateHabitInput = {
         is_checked: isChecking,
-        completed_at: isChecking ? now.toISOString() : targetHabit.completed_at,
+        checked_at: isChecking ? now.toISOString() : targetHabit.checked_at,
         streak_days: newStreakDays,
         updated_at: now.toISOString(),
       };
 
-      return await habitRepository.update(id ,completedHabit)
+      return await habitRepository.update(id ,checkedHabit)
     } catch (error) {
       throw new Error(`habit.service complete: ${error}`)
     }

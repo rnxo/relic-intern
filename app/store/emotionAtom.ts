@@ -15,7 +15,7 @@ export const useDailyPetStats = () => {
     const todayStr = new Date().toISOString().split("T")[0];
 
     const completedToday = habits.filter(
-        (h) => h.is_checked && h.completed_at && h.completed_at.split("T")[0] === todayStr
+        (h) => h.is_checked && h.checked_at && h.checked_at.split("T")[0] === todayStr
     );
 
     const blocks: TimeBlock[] = ["morning", "daytime", "night", "midnight"];
