@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 
 export function HabitItem({ habit }: { habit: Habit }) {
   const { deleteHabit, checkHabit } = useHabits();
-  const router = useRouter();
+  const router = useRouter();    
 
   return (
     <Card
@@ -22,7 +22,7 @@ export function HabitItem({ habit }: { habit: Habit }) {
           {/* チェックボタン */}
           <button
             onClick={() => checkHabit(habit.id)}
-            className="relative flex min-h-[44px] min-w-[44px] flex-shrink-0 cursor-pointer items-center justify-center rounded-full transition-transform hover:scale-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-lumi-primary"
+            className="relative flex min-h-11 min-w-11 shrink-0 cursor-pointer items-center justify-center rounded-full transition-transform hover:scale-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-lumi-primary"
             aria-label={habit.is_checked ? '完了を取り消す' : '完了にする'}
             aria-pressed={habit.is_checked}
           >
@@ -74,9 +74,9 @@ export function HabitItem({ habit }: { habit: Habit }) {
         <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 pl-14">
           <span
             className="flex-shrink-0 rounded-full bg-lumi-primary px-2.5 py-1 text-xs font-semibold whitespace-nowrap text-white tabular-nums"
-            aria-label={`経過 ${habit.elasped_days} 日 / 目標 ${habit.target_days} 日`}
+            aria-label={`経過 ${habit.elapsed_days} 日 / 目標 ${habit.target_days} 日`}
           >
-            {habit.elasped_days}/{habit.target_days}日
+            {habit.elapsed_days}/{habit.target_days}日
           </span>
           <HabitTypeTag type={habit.type} />
           {Number(habit.streak_days) > 0 && (

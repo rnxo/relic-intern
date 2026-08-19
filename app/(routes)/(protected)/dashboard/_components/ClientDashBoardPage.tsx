@@ -16,7 +16,7 @@ interface ClientDashBoardPageProps {
 }
 
 export default function ClientDashBoardPage({ initHabits, initPet }: ClientDashBoardPageProps) {
-  const { data: habits } = useHabitsQuery({ initialData: initHabits });
+  const { data: habits = [] } = useHabitsQuery({ initialData: initHabits });
   const { data: pet } = usePetQuery({ initialData: initPet });
 
   return (

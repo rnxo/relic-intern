@@ -16,7 +16,7 @@ export function NavigationIcon({ href, label, icon: Icon, isActive }: Navigation
     <Link
       href={href}
       className="relative flex flex-col items-center justify-center gap-1
-                 min-h-[56px] flex-1 cursor-pointer
+                 min-h-14 flex-1 cursor-pointer
                  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lumi-primary rounded-xl"
       aria-label={label}
       aria-current={isActive ? "page" : undefined}
