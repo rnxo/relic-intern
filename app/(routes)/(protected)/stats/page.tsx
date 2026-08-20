@@ -3,7 +3,6 @@
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
-  ArrowLeft,
   BookOpen,
   ChevronLeft,
   ChevronRight,
@@ -20,6 +19,7 @@ import {
 import { useHabitsQuery } from "@/app/features/habit/habit.state";
 import { HABIT_TYPE_LABELS, type Habit, type HabitTypeKey } from "@/app/features/habit/habit.type";
 import { generateDummyMonthlyHeatmap } from "./_lib/dummyMonthlyHeatmap";
+import { StatsHeader } from "./_components/StatsHeader";
 
 const HABIT_TYPE_ICONS: Record<HabitTypeKey, typeof Dumbbell> = {
   exercise: Dumbbell,
@@ -98,23 +98,7 @@ export default function StatsPage() {
     <div className="min-h-screen bg-lumi-base pb-10 text-lumi-fg">
       <div className="mx-auto max-w-md px-4 pt-6 sm:px-6">
         {/* ヘッダー */}
-        <div className="mb-4 flex items-center justify-between">
-          <button
-            onClick={() => router.back()}
-            className="flex min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-full text-lumi-fg transition-colors hover:bg-lumi-surface"
-            aria-label="前のページに戻る"
-          >
-            <ArrowLeft size={20} aria-hidden="true" />
-          </button>
-          <h1 className="text-base font-medium text-lumi-fg">統計</h1>
-          <div
-            className="flex h-9 w-9 items-center justify-center rounded-full bg-lumi-surface"
-            aria-hidden="true"
-          >
-            <MoonStar size={16} className="text-lumi-secondary" />
-          </div>
-        </div>
-
+        <StatsHeader />
         {/* Lumiコメント */}
         <div className="mb-4 flex items-center gap-2.5 rounded-xl bg-lumi-surface px-3.5 py-2.5">
           <Feather size={18} className="shrink-0 text-lumi-secondary" aria-hidden="true" />
