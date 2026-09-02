@@ -50,26 +50,49 @@ function mulberry32(seed: number) {
 
 export function generateDummyMonthlyHeatmap(
   habit: Habit,
+  target: { year: number; month: number }, // month は0始まり。表示対象の年月
   today: Date = new Date(),
 ): MonthlyHeatmapData {
-  const year = today.getFullYear();
-  const month = today.getMonth();
+  const { year, month } = target;
   const daysInMonth = new Date(year, month + 1, 0).getDate();
   const firstWeekday = new Date(year, month, 1).getDay();
   const todayDate = today.getDate();
 
-  const elapsedDays = Math.max(0, Number(habit.elapsed_days) || 0);
-  const windowLen = Math.max(1, Math.min(elapsedDays || 1, todayDate));
-  const rangeStart = todayDate - windowLen + 1;
+  const isCurrentMonth = year === today.getFullYear() && month === today.getMonth();
+  const createdAt = habit.created_at ? new Date(habit.created_at) : today;
+  const isFutureMonth =
+    year > today.getFullYear() || (year === today.getFullYear() && month > today.getMonth());
+  const isBeforeCreatedMonth =
+    year < createdAt.getFullYear() ||
+    (year === createdAt.getFullYear() && month < createdAt.getMonth());
 
-  const streakLen = Math.max(0, Math.min(Number(habit.streak_days) || 0, windowLen));
+  // その月における有効範囲(rangeStart〜rangeEnd)を求める。
+  // 範囲がない(未来月・習慣開始前の月)場合は rangeStart > rangeEnd にして下のループを素通りさせる。
+  let rangeStart = 1;
+  let rangeEnd = daysInMonth;
+  if (isFutureMonth || isBeforeCreatedMonth) {
+    rangeStart = 1;
+    rangeEnd = 0;
+  } else {
+    if (isCurrentMonth) rangeEnd = todayDate;
+    if (year === createdAt.getFullYear() && month === createdAt.getMonth()) {
+      rangeStart = createdAt.getDate();
+    }
+  }
+  const windowLen = Math.max(0, rangeEnd - rangeStart + 1);
+
+  // 月ごとに異なるが同じ月なら常に同じ模様になるよう、シードに年月を含める
+  const random = mulberry32(hashSeed(`${habit.id}-${year}-${month}`));
+  const checkedDays = new Set<number>();
+
+  // 直近の連続日数(habit.streak_days)は「今表示している月」が今月のときだけ反映する
+  const streakLen = isCurrentMonth
+    ? Math.max(0, Math.min(Number(habit.streak_days) || 0, windowLen))
+    : 0;
   const streakEnd = habit.is_checked ? todayDate : todayDate - 1;
   const streakStart = streakLen > 0 ? streakEnd - streakLen + 1 : streakEnd + 1;
 
-  const random = mulberry32(hashSeed(habit.id));
-  const checkedDays = new Set<number>();
-
-  for (let day = rangeStart; day <= todayDate; day++) {
+  for (let day = rangeStart; day <= rangeEnd; day++) {
     if (streakLen > 0 && day >= streakStart && day <= streakEnd) {
       checkedDays.add(day);
       continue;
@@ -81,19 +104,19 @@ export function generateDummyMonthlyHeatmap(
   for (let day = 1; day <= daysInMonth; day++) {
     const weekday = (firstWeekday + (day - 1)) % 7;
     const col = Math.floor((firstWeekday + (day - 1)) / 7);
-    const isInRange = day >= rangeStart && day <= todayDate;
+    const isInRange = day >= rangeStart && day <= rangeEnd;
     cells.push({ day, weekday, col, isChecked: isInRange && checkedDays.has(day), isInRange });
   }
 
   let currentStreak = 0;
-  for (let day = todayDate; day >= rangeStart; day--) {
+  for (let day = rangeEnd; day >= rangeStart; day--) {
     if (checkedDays.has(day)) currentStreak++;
     else break;
   }
 
   let bestStreak = 0;
   let run = 0;
-  for (let day = rangeStart; day <= todayDate; day++) {
+  for (let day = rangeStart; day <= rangeEnd; day++) {
     if (checkedDays.has(day)) {
       run++;
       bestStreak = Math.max(bestStreak, run);
@@ -102,7 +125,7 @@ export function generateDummyMonthlyHeatmap(
     }
   }
 
-  const achievementRate = Math.round((checkedDays.size / windowLen) * 100);
+  const achievementRate = windowLen > 0 ? Math.round((checkedDays.size / windowLen) * 100) : 0;
 
   return {
     year,

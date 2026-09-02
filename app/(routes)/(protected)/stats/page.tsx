@@ -63,16 +63,24 @@ export default function StatsPage() {
   const router = useRouter();
   const { data: habits = [], isPending } = useHabitsQuery();
   const [activeHabitId, setActiveHabitId] = useState<string | null>(null);
+  // 表示中の月を「今月からのオフセット」で持つ。0=今月, -1=先月 ... 未来方向には進めない
+  const [monthOffset, setMonthOffset] = useState(0);
 
   const activeHabit = useMemo(() => {
     if (habits.length === 0) return null;
     return habits.find((h) => h.id === activeHabitId) ?? habits[0];
   }, [habits, activeHabitId]);
 
+  const target = useMemo(() => {
+    const now = new Date();
+    const d = new Date(now.getFullYear(), now.getMonth() + monthOffset, 1);
+    return { year: d.getFullYear(), month: d.getMonth() };
+  }, [monthOffset]);
+
   const heatmap = useMemo(() => {
     if (!activeHabit) return null;
-    return generateDummyMonthlyHeatmap(activeHabit);
-  }, [activeHabit]);
+    return generateDummyMonthlyHeatmap(activeHabit, target);
+  }, [activeHabit, target]);
 
   if (isPending) {
     return (
@@ -149,15 +157,30 @@ export default function StatsPage() {
           })}
         </div>
 
-        {/* 月ナビ(表示のみ・他月には未対応) */}
+        {/* 月ナビ(未来月へは進めない) */}
         <div className="mb-2 flex items-center justify-between px-1">
-          <ChevronLeft size={16} className="text-lumi-muted/40" aria-hidden="true" />
+          <button
+            type="button"
+            onClick={() => setMonthOffset((o) => o - 1)}
+            aria-label="前の月へ"
+            className="cursor-pointer text-lumi-muted transition-colors hover:text-lumi-fg"
+          >
+            <ChevronLeft size={16} aria-hidden="true" />
+          </button>
           <span className="text-xs text-lumi-muted">{monthLabel}</span>
-          <ChevronRight size={16} className="text-lumi-muted/40" aria-hidden="true" />
+          <button
+            type="button"
+            onClick={() => setMonthOffset((o) => Math.min(0, o + 1))}
+            disabled={monthOffset >= 0}
+            aria-label="次の月へ"
+            className="cursor-pointer text-lumi-muted transition-colors hover:text-lumi-fg disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:text-lumi-muted"
+          >
+            <ChevronRight size={16} aria-hidden="true" />
+          </button>
         </div>
 
         {/* カレンダーヒートマップ */}
-        <CalendarHeatmap />
+        <CalendarHeatmap cells={heatmap.cells} />
         {/* 統計カード */}
         <div className="grid grid-cols-3 gap-2">
           <div className="rounded-lg bg-lumi-surface px-2 py-2.5 text-center">
