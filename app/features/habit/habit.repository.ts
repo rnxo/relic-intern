@@ -1,6 +1,8 @@
 import { getAuthUser } from "@/app/lib/auth";
 import type { Habit, NewHabitInput, UpdateHabitInput } from "./habit.type";
 import { createClient } from "@/app/lib/supabase/server";
+import { getElapsedDays } from "@/app/utils/getElapsedDays";
+import { getJstDateStr } from "@/app/utils/getJstDateStr";
 
 
 
@@ -19,14 +21,14 @@ export const habitRepository: IHabitRepository = {
 
         if(!user) throw new Error("unauthorized user is trying to get some secured data");
 
-        const todayStr = new Date().toISOString().split('T')[0];
+        const todayStr = getJstDateStr();
 
         const { error: resetError } = await supabase
             .from('habits')
-            .update({ is_completed: false })
+            .update({ is_checked: false })
             .eq('user_id', user.id)
-            .eq('is_completed', true)
-            .lt('completed_at', todayStr);
+            .eq('is_checked', true)
+            .lt('checked_at', todayStr);
 
         if(resetError) throw new Error(resetError.message);
 
@@ -36,7 +38,27 @@ export const habitRepository: IHabitRepository = {
             .eq('user_id', user.id);
 
         if(error) throw new Error(error.message);
-        return data as Habit[];
+
+        const habits = data as Habit[];
+
+        const idsToComplete = habits
+            .filter((h) => !h.is_completed && getElapsedDays(h.created_at) > Number(h.target_days))
+            .map((h) => h.id);
+
+        if(idsToComplete.length > 0) {
+            const { error: completeError } = await supabase
+                .from('habits')
+                .update({ is_completed: true })
+                .in('id', idsToComplete)
+                .eq('user_id', user.id);
+
+            if(completeError) throw new Error(completeError.message);
+
+            habits.forEach((h) => {
+                if(idsToComplete.includes(h.id)) h.is_completed = true;
+            });
+        }
+        return habits;
     },
     getById: async (id: string) => {
         const supabase = await createClient();

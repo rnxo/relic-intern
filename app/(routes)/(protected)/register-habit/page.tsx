@@ -18,7 +18,6 @@ import {
 import { ChevronLeft, Pencil, Plus, Check, Loader2 } from "lucide-react";
 import { motion } from "motion/react";
 import { HabitTypeCardList } from "./_components/HabitTypeCardList";
-import { DurationSelectorFiled } from "./_components/DurationSelectorField";
 
 function RegisterHabitContent() {
   const router = useRouter();
@@ -140,17 +139,6 @@ function RegisterHabitContent() {
                   className="w-full h-12 rounded-2xl bg-lumi-base border-2 border-lumi-primary/30 hover:border-lumi-primary focus:border-lumi-primary text-lumi-fg placeholder:text-lumi-muted/50 transition-colors"
                   required
                   aria-required="true"
-                />
-              </div>
-
-              {/* 所要時間 */}
-              <div className="space-y-2.5">
-                <Label className="text-xs font-bold text-lumi-primary uppercase tracking-wider">
-                  所要時間
-                </Label>
-                <DurationSelectorFiled
-                  value={input.duration}
-                  onChange={(val) => handleChange("duration", val)}
                 />
               </div>
 

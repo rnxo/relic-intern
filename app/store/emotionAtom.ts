@@ -3,6 +3,7 @@ import { testTimeAtom } from "./testTimeAtom";
 import { useHabitsQuery } from "@/app/features/habit/habit.state";
 import { usePetQuery } from "@/app/features/pet/pet.state";
 import { calculateBlockPoints, TimeBlock, isBlockPassed, calculateExpression } from "../lib/petCalculations";
+import { getJstDateStr } from "@/app/utils/getJstDateStr";
 
 export const useDailyPetStats = () => {
     const { data: habits = [] } = useHabitsQuery();
@@ -12,10 +13,10 @@ export const useDailyPetStats = () => {
     if (!pet) return null;
 
     const currentHour = testHour !== null ? testHour : new Date().getHours();
-    const todayStr = new Date().toISOString().split("T")[0];
+    const todayStr = getJstDateStr();
 
     const completedToday = habits.filter(
-        (h) => h.is_completed && h.completed_at && h.completed_at.split("T")[0] === todayStr
+        (h) => h.is_checked && h.checked_at && h.checked_at.split("T")[0] === todayStr
     );
 
     const blocks: TimeBlock[] = ["morning", "daytime", "night", "midnight"];

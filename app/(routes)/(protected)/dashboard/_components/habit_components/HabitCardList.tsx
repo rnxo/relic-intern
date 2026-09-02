@@ -7,19 +7,19 @@ import { HabitGroup } from "./HabitGroup";
 import { Habit } from "@/app/features/habit/habit.type";
 
 interface HabitCardListProps {
-  habits: Habit[] | undefined;
+  habits: Habit[] | [];
 }
 
 export default function HabitCardList({ habits }: HabitCardListProps) {
   const router = useRouter();
 
-  const morningHabits = habits?.filter((h) => h.time_block === "morning") || [];
-  const daytimeHabits = habits?.filter((h) => h.time_block === "daytime") || [];
-  const eveningHabits = habits?.filter((h) => h.time_block === "evening") || [];
-  const nightHabits = habits?.filter((h) => h.time_block === "night") || [];
-  const midnightHabits =
-    habits?.filter((h) => h.time_block === "midnight") || [];
 
+  const morningHabits = habits.filter((h) => h.time_block === "morning");
+  const daytimeHabits = habits.filter((h) => h.time_block === "daytime");
+  const eveningHabits = habits.filter((h) => h.time_block === "evening");
+  const nightHabits = habits.filter((h) => h.time_block === "night");
+  const midnightHabits = habits.filter((h) => h.time_block === "midnight");
+  
   return (
     <div className="px-4 py-6 sm:px-6 sm:py-8 space-y-8 max-w-3xl mx-auto w-full">
       <HabitGroup title="朝方" habits={morningHabits} />

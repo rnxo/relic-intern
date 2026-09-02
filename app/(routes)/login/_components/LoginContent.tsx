@@ -3,7 +3,7 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState, useId } from "react";
-import { login, loginAsGuest } from "@/app/auth/actions";
+import { login } from "@/app/auth/actions";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
@@ -732,7 +732,7 @@ export default function LoginContent() {
               className="flex justify-between mt-5 text-[0.73rem]"
             >
               <Link
-                href="#"
+                href="/send-reset-password-email"
                 className="text-lumi-primary/60 transition-all duration-200 hover:text-lumi-primary/90 hover:underline underline-offset-2"
               >
                 パスワードをお忘れですか？

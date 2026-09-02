@@ -54,10 +54,29 @@ export async function signout() {
   redirect("/login");
 }
 
-export async function loginAsGuest(): Promise<{ error: string } | never > {
+export async function sendResetPasswordEmail(email: string): Promise<{ error?: string }> {
   const supabase = await createClient();
-  const { error } = await supabase.auth.signInAnonymously();
-  if (error) return { error: error.message };
+  const { error } = await supabase.auth.resetPasswordForEmail(email);
+
+  if (error) {
+    return { error: error.message };
+  }
+  return {};
+}
+
+export async function updatePassword(newPassword: string): Promise<{ error: string } | never> {
+  const supabase = await createClient();
+
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) {
+    return { error: "セッションの有効期限が切れています。もう一度パスワードリセットをリクエストしてください" };
+  }
+
+  const { error } = await supabase.auth.updateUser({ password: newPassword });
+  if (error) {
+    return { error: error.message };
+  }
+
   revalidatePath("/", "layout");
   redirect("/dashboard");
 }
