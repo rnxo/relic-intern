@@ -1,5 +1,5 @@
 import { cva } from 'class-variance-authority';
-import type { DailyHeatmapCell } from '../_lib/dummyMonthlyHeatmap';
+import type { DailyHeatmapCell } from '../_lib/monthlyHeatmap';
 
 const dayCell = cva(
   "flex aspect-square w-full items-center justify-center rounded-[3px] border text-xs",
@@ -47,9 +47,9 @@ export function CalendarHeatmap({ cells }: CalendarHeatmapProps) {
       </div>
       <div className="mt-3 flex items-center gap-1.5">
         <span className="inline-block h-[11px] w-[11px] rounded-[3px] border border-dashed border-lumi-border bg-transparent" />
-        <span className="text-[10.5px] text-lumi-muted">unchecked</span>
+        <span className="text-base text-lumi-muted">unchecked</span>
         <span className="ml-2 inline-block h-[11px] w-[11px] rounded-[3px] border border-solid border-lumi-primary bg-lumi-primary" />
-        <span className="text-[10.5px] text-lumi-muted">checked</span>
+        <span className="text-base text-lumi-muted">checked</span>
       </div>
     </div>
   );

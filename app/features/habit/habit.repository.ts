@@ -2,6 +2,7 @@ import { getAuthUser } from "@/app/lib/auth";
 import type { Habit, NewHabitInput, UpdateHabitInput } from "./habit.type";
 import { createClient } from "@/app/lib/supabase/server";
 import { getElapsedDays } from "@/app/utils/getElapsedDays";
+import { getJstDateStr } from "@/app/utils/getJstDateStr";
 
 
 
@@ -20,7 +21,7 @@ export const habitRepository: IHabitRepository = {
 
         if(!user) throw new Error("unauthorized user is trying to get some secured data");
 
-        const todayStr = new Date().toISOString().split('T')[0];
+        const todayStr = getJstDateStr();
 
         const { error: resetError } = await supabase
             .from('habits')

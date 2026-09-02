@@ -14,28 +14,9 @@ import { getTrust } from "@/app/utils/getTrust";
 import { getExhaustion } from "@/app/utils/getExhaustion";
 import { petRepository } from "../pet/pet.repository";
 import { UpdatePetType } from "../pet/pet.type";
-
-const getStreakDays = (
-  isCompleting: boolean,
-  streakDays: number,
-  checkedAt: string,
-  todayStr: string,
-): number => {
-  if (isCompleting) {
-    const lastDate = checkedAt?.split("T")[0] ?? null;
-    if (!lastDate) return 1;
-    const diffDays = Math.floor(
-      (new Date(todayStr).getTime() - new Date(lastDate).getTime()) /
-        (1000 * 60 * 60 * 24),
-    );
-    return diffDays <= 1 ? streakDays + 1 : 1;
-  } else {
-    if (checkedAt?.split("T")[0] === todayStr) {
-      return Math.max(0, streakDays - 1);
-    }
-    return streakDays;
-  }
-};
+import { getJstDateStr } from "@/app/utils/getJstDateStr";
+import { habitLogRepository } from "../habitLog/habitLog.repository";
+import { toLoggedOnSet, calcCurrentStreak } from "../habitLog/habitLog.logic";
 
 //今後バリデーションを追加する
 export const habitService = {
@@ -58,16 +39,20 @@ export const habitService = {
   check: async (id: string) => {
     try {
       const targetHabit = await habitRepository.getById(id);
-      const now = new Date();
-      const todayStr = now.toISOString().split("T")[0];
+      const todayStr = getJstDateStr();
       const isChecking = !targetHabit.is_checked;
 
-      const newStreakDays = getStreakDays(
-        isChecking,
-        targetHabit.streak_days,
-        targetHabit.checked_at,
-        todayStr,
-      );
+      if (isChecking) {
+        await habitLogRepository.add(id, todayStr);
+      } else {
+        await habitLogRepository.remove(id, todayStr);
+      }
+
+      const logs = await habitLogRepository.getByRange({
+        from: getJstDateStr(new Date(targetHabit.created_at)),
+        to: todayStr,
+      });
+      const newStreakDays = calcCurrentStreak(toLoggedOnSet(logs, id), todayStr);
 
       const currentPet = await petRepository.get();
       const updatedPet: UpdatePetType = {
@@ -77,6 +62,7 @@ export const habitService = {
 
       await petRepository.update(updatedPet);
 
+      const now = new Date();
       const checkedHabit: UpdateHabitInput = {
         is_checked: isChecking,
         checked_at: isChecking ? now.toISOString() : targetHabit.checked_at,

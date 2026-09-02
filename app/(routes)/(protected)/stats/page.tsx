@@ -18,7 +18,9 @@ import {
 } from "lucide-react";
 import { useHabitsQuery } from "@/app/features/habit/habit.state";
 import { HABIT_TYPE_LABELS, type Habit, type HabitTypeKey } from "@/app/features/habit/habit.type";
-import { generateDummyMonthlyHeatmap } from "./_lib/dummyMonthlyHeatmap";
+import { useHabitLogsQuery } from "@/app/features/habitLog/habitLog.state";
+import { getJstDateStr } from "@/app/utils/getJstDateStr";
+import { buildMonthlyHeatmap } from "./_lib/monthlyHeatmap";
 import { StatsHeader } from "./_components/StatsHeader";
 import { HabitTab } from "./_components/HabitTab";
 import { CalendarHeatmap } from "./_components/CalendarHeatmap";
@@ -77,10 +79,19 @@ export default function StatsPage() {
     return { year: d.getFullYear(), month: d.getMonth() };
   }, [monthOffset]);
 
+  const range = useMemo(() => {
+    const from = new Date(target.year, target.month, 1);
+    from.setDate(from.getDate() - 62); // 月またぎの連続記録を数えるため余分に取得
+    const to = new Date(target.year, target.month + 1, 0);
+    return { from: getJstDateStr(from), to: getJstDateStr(to) };
+  }, [target]);
+
+  const { data: logs = [] } = useHabitLogsQuery(range);
+
   const heatmap = useMemo(() => {
     if (!activeHabit) return null;
-    return generateDummyMonthlyHeatmap(activeHabit, target);
-  }, [activeHabit, target]);
+    return buildMonthlyHeatmap(activeHabit, logs, target);
+  }, [activeHabit, logs, target]);
 
   if (isPending) {
     return (
