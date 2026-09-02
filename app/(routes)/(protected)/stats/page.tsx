@@ -20,6 +20,8 @@ import { useHabitsQuery } from "@/app/features/habit/habit.state";
 import { HABIT_TYPE_LABELS, type Habit, type HabitTypeKey } from "@/app/features/habit/habit.type";
 import { generateDummyMonthlyHeatmap } from "./_lib/dummyMonthlyHeatmap";
 import { StatsHeader } from "./_components/StatsHeader";
+import { HabitTab } from "./_components/HabitTab";
+import { CalendarHeatmap } from "./_components/CalendarHeatmap";
 
 const HABIT_TYPE_ICONS: Record<HabitTypeKey, typeof Dumbbell> = {
   exercise: Dumbbell,
@@ -108,6 +110,7 @@ export default function StatsPage() {
         </div>
 
         {/* habitタブ */}
+        {/* <HabitTab habits={habits}/> */}
         <div
           className="mb-4 flex gap-1.5 overflow-x-auto pb-1"
           style={{ scrollbarWidth: "none" }}
@@ -154,73 +157,7 @@ export default function StatsPage() {
         </div>
 
         {/* カレンダーヒートマップ */}
-        <div className="mb-3 rounded-xl bg-lumi-surface/60 p-3">
-          <div className="flex gap-2">
-            <div
-              className="grid flex-shrink-0 gap-[3px]"
-              style={{ gridTemplateRows: "repeat(7, 14px)" }}
-            >
-              {WEEKDAY_LABELS.map((label, i) => (
-                <div
-                  key={label}
-                  className="flex h-[14px] w-[14px] items-center justify-center text-[9px] text-lumi-muted/70"
-                >
-                  {i % 2 === 1 ? label : ""}
-                </div>
-              ))}
-            </div>
-            <div
-              className="grid gap-[3px]"
-              style={{
-                gridTemplateRows: "repeat(7, 14px)",
-                gridAutoFlow: "column",
-                gridAutoColumns: "14px",
-              }}
-            >
-              {heatmap.cells.map((cell) => (
-                <div
-                  key={cell.day}
-                  title={`${heatmap.month + 1}月${cell.day}日${
-                    cell.isInRange ? (cell.isChecked ? "：達成" : "：未達成") : ""
-                  }`}
-                  className={`h-[14px] w-[14px] rounded-[3px] ${
-                    cell.day === heatmap.todayDate
-                      ? "outline outline-1 outline-offset-1 outline-lumi-fg"
-                      : ""
-                  }`}
-                  style={{
-                    gridRow: cell.weekday + 1,
-                    gridColumn: cell.col + 1,
-                    background: !cell.isInRange
-                      ? "transparent"
-                      : cell.isChecked
-                        ? accentColor
-                        : "var(--lumi-chart-inactive)",
-                    border: !cell.isInRange
-                      ? "1px dashed var(--lumi-border)"
-                      : cell.isChecked
-                        ? "none"
-                        : "1px solid var(--lumi-border)",
-                    opacity: !cell.isInRange ? 0.35 : cell.isChecked ? 1 : 0.45,
-                  }}
-                />
-              ))}
-            </div>
-          </div>
-          <div className="mt-3 flex items-center gap-1.5 pl-[22px]">
-            <span
-              className="inline-block h-[11px] w-[11px] rounded-[3px]"
-              style={{ background: "var(--lumi-chart-inactive)", opacity: 0.45, border: "1px solid var(--lumi-border)" }}
-            />
-            <span className="text-[10.5px] text-lumi-muted">未達成</span>
-            <span
-              className="ml-2 inline-block h-[11px] w-[11px] rounded-[3px]"
-              style={{ background: accentColor }}
-            />
-            <span className="text-[10.5px] text-lumi-muted">達成</span>
-          </div>
-        </div>
-
+        <CalendarHeatmap />
         {/* 統計カード */}
         <div className="grid grid-cols-3 gap-2">
           <div className="rounded-lg bg-lumi-surface px-2 py-2.5 text-center">

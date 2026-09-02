@@ -22,8 +22,6 @@ const HABIT_TYPE_COLOR_VARS: Record<HabitTypeKey, string> = {
   others: 'var(--lumi-chart-other)',
 };
 
-const WEEKDAY_LABELS = ['日', '月', '火', '水', '木', '金', '土'];
-
 function getHabitTypeKey(type: string | undefined): HabitTypeKey {
   if (type && type in HABIT_TYPE_LABELS) return type as HabitTypeKey;
   return 'others';
