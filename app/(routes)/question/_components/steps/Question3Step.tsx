@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { motion } from "motion/react";
 import { Reorder } from "motion/react";
-import { HabitTypeIcon } from "@/app/(routes)/(protected)/register-habit/_components/HabitTypeIcons";
+import { HabitTypeIcon } from "@/app/(routes)/(protected)/(with-nav)/register-habit/_components/HabitTypeIcons";
 
 const DEFAULT_RANKING = ["運動", "学習", "食事", "睡眠", "その他"];
 

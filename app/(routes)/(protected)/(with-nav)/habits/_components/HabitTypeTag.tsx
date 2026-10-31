@@ -1,6 +1,6 @@
 import { cn } from "@/app/utils/cn-utils";
 import { cva, VariantProps } from "class-variance-authority";
-import { HabitTypeIcon } from "@/app/(routes)/(protected)/register-habit/_components/HabitTypeIcons";
+import { HabitTypeIcon } from "@/app/(routes)/(protected)/(with-nav)/register-habit/_components/HabitTypeIcons";
 import { HABIT_TYPE_LABELS, HabitTypeKey } from "@/app/features/habit/habit.type";
 
 const habitTypeTagVariants = cva("flex items-center gap-1 font-bold", {

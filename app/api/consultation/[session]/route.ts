@@ -43,3 +43,19 @@ export async function DELETE(
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }
+
+// 相談タイトルを更新する
+export async function PATCH(
+  req: NextRequest,
+  { params }: { params: Promise<{ session: string }> }
+) {
+  try {
+    const { session: sessionId } = await params;
+    const body = await req.json();
+    await consultationService.updateSessionTitle(sessionId, String(body.title ?? ""));
+    return NextResponse.json({ message: "success" });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unknown error";
+    return NextResponse.json({ error: message }, { status: 500 });
+  }
+}

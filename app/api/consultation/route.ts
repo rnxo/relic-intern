@@ -1,5 +1,5 @@
 import { consultationService } from "@/app/features/consultation/consultation.service";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
@@ -11,10 +11,10 @@ export async function GET() {
   }
 }
 
-export async function POST(req: NextRequest) {
+// 空の相談を作成してIDを返す
+export async function POST() {
   try {
-    const body = await req.json();
-    const sessionId = await consultationService.initiateSession(body.title, body.content);
+    const sessionId = await consultationService.createEmptySession();
     return NextResponse.json({ message: "success", sessionId }, { status: 200 });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown error";

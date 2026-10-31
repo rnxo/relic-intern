@@ -2,13 +2,15 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { MessageSquare, Trash2, X, PlusCircle, History } from "lucide-react";
+import { MessageSquare, X, PlusCircle, History } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Session } from "@/app/features/consultation/consultation.type";
 import {
   useSessionsQuery,
   useDeleteSessionMutation,
+  useCreateSessionMutation,
 } from "@/app/features/consultation/consultation.state";
+import { SessionItemMenu } from "./SessionItemMenu";
 
 interface Props {
   currentSessionId: string;
@@ -20,10 +22,9 @@ export function Sidebar({ currentSessionId, initialSessions }: Props) {
   const router = useRouter();
   const { data: sessions } = useSessionsQuery({ initialData: initialSessions });
   const deleteSession = useDeleteSessionMutation();
+  const createSession = useCreateSessionMutation();
 
-  const handleDelete = async (e: React.MouseEvent, sessionId: string) => {
-    e.stopPropagation();
-    if (!confirm("この相談を削除しますか？")) return;
+  const handleDelete = async (sessionId: string) => {
     await deleteSession.mutateAsync(sessionId);
     if (sessionId === currentSessionId) {
       router.push("/dashboard");
@@ -35,9 +36,16 @@ export function Sidebar({ currentSessionId, initialSessions }: Props) {
     setOpen(false);
   };
 
-  const handleNewChat = () => {
-    router.push("/dashboard");
-    setOpen(false);
+  // 空の相談を作成して移動する（ダッシュボードの✦ボタンと同じ動き）
+  const handleNewChat = async () => {
+    if (createSession.isPending) return;
+    try {
+      const sessionId = await createSession.mutateAsync();
+      router.push(`/consultation-room/${sessionId}`);
+      setOpen(false);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   return (
@@ -60,7 +68,7 @@ export function Sidebar({ currentSessionId, initialSessions }: Props) {
 
       {/* スライドインパネル */}
       <div
-        className={`fixed left-0 top-0 h-full w-72 bg-lumi-sidebar z-50 flex flex-col transform transition-transform duration-300 ease-in-out ${
+        className={`fixed left-0 top-0 h-full w-72 bg-lumi-base z-50 flex flex-col transform transition-transform duration-300 ease-in-out ${
           open ? "translate-x-0" : "-translate-x-full"
         }`}
       >
@@ -80,6 +88,7 @@ export function Sidebar({ currentSessionId, initialSessions }: Props) {
             variant="outline"
             className="w-full border-lumi-border/50 text-lumi-fg hover:bg-lumi-surface text-sm h-9"
             onClick={handleNewChat}
+            disabled={createSession.isPending}
           >
             <PlusCircle size={15} className="mr-2" />
             新しい相談
@@ -99,7 +108,7 @@ export function Sidebar({ currentSessionId, initialSessions }: Props) {
               return (
                 <div
                   key={session.id}
-                  className={`group flex items-center gap-2 px-3 py-2 mx-2 my-0.5 rounded-md cursor-pointer transition-colors ${
+                  className={`flex items-center gap-2 px-3 py-2 mx-2 my-0.5 rounded-md cursor-pointer transition-colors ${
                     isActive
                       ? "bg-lumi-primary/20 text-lumi-primary"
                       : "text-lumi-fg hover:bg-lumi-surface"
@@ -113,14 +122,8 @@ export function Sidebar({ currentSessionId, initialSessions }: Props) {
                       {new Date(session.created_at).toLocaleDateString("ja-JP")}
                     </p>
                   </div>
-                  {/* 削除ボタン（C-06） */}
-                  <button
-                    onClick={(e) => handleDelete(e, session.id)}
-                    className="opacity-0 group-hover:opacity-100 p-1 text-lumi-muted hover:text-red-400 rounded transition-all"
-                    aria-label="削除"
-                  >
-                    <Trash2 size={13} />
-                  </button>
+                  {/* 「…」メニュー: タイトル編集・削除（タッチ操作でも押せるよう常に表示） */}
+                  <SessionItemMenu session={session} onDelete={handleDelete} />
                 </div>
               );
             })

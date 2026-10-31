@@ -1,9 +1,8 @@
 import { profileService } from "@/app/features/profile/profile.service";
-import Sidebar from "./_components/Navigationbar";
 import JotaiHydrator from "./_components/JotaiHydrator";
 import { Analytics } from "@vercel/analytics/next";
-import Navigationbar from "./_components/Navigationbar";
 
+// ログイン後の全ページ共通レイアウト（ナビの有無は子のルートグループで決める）
 export default async function PagesLayout({
   children,
 }: Readonly<{
@@ -15,16 +14,9 @@ export default async function PagesLayout({
   } catch {}
 
   return (
-    <div>
-      <Navigationbar />
-      {/* モバイル: サイドバーは非表示（ボトムナビ）なので余白なし
-          lg以上: 左サイドバー(w-20)分だけ本文をずらす */}
-      <JotaiHydrator profile={profile}>
-        <div className="lg:ml-20 pb-16 lg:pb-0">
-          {children}
-          <Analytics />
-        </div>
-      </JotaiHydrator>
-    </div>
+    <JotaiHydrator profile={profile}>
+      {children}
+      <Analytics />
+    </JotaiHydrator>
   );
 }

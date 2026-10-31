@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
-import { SelectCard } from "@/app/(routes)/(protected)/register-habit/_components/SelectCard";
+import { SelectCard } from "@/app/(routes)/(protected)/(with-nav)/register-habit/_components/SelectCard";
 
 const DURATION_OPTIONS = [
     { label: "30分未満", value: "30" },

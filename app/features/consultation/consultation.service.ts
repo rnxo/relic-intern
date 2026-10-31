@@ -1,5 +1,5 @@
 import { consultationRepository } from "./consultation.repository";
-import { ChatRoom, Message } from "./consultation.type";
+import { ChatRoom, Message, SESSION_TITLE_MAX_LENGTH } from "./consultation.type";
 import { getGenAI } from "@/app/lib/gemini";
 import { LUMI_SYSTEM_PROMPT, buildPrompt } from "./consultation.prompt";
 
@@ -21,13 +21,18 @@ async function sendMessageToLumi(sessionId: string, userContent: string): Promis
   return lumiMessage;
 }
 
-// C-05: ユーザーの最初のメッセージからセッションタイトルを自動生成
-async function generateSessionTitle(userContent: string): Promise<string> {
-  const result = await getGenAI().models.generateContent({
-    model: "gemini-2.5-flash",
-    contents: `次のメッセージを元に、相談セッションのタイトルを10文字以内の日本語で生成してください。タイトルのみを返してください。\n\n「${userContent}」`,
-  });
-  return (result.text ?? "相談セッション").trim().slice(0, 10);
+// 空の相談が残っていてよい時間（これを過ぎた空の相談は履歴一覧の取得時に削除する）
+const STALE_EMPTY_SESSION_MINUTES = 10;
+
+// 初期タイトル「相談_YYYY/MM/DD」（サーバーがUTCで動いても日本時間の日付にする）
+function buildDefaultTitle(date: Date = new Date()): string {
+  const dateStr = new Intl.DateTimeFormat("ja-JP", {
+    timeZone: "Asia/Tokyo",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(date);
+  return `相談_${dateStr}`;
 }
 
 export const consultationService = {
@@ -56,17 +61,29 @@ export const consultationService = {
 
   sendMessage: sendMessageToLumi,
 
-  // C-05: セッション作成 + 初回メッセージ送信 + タイトル自動生成
-  initiateSession: async (title: string, userContent: string): Promise<string> => {
-    const session = await consultationRepository.createSession(title);
-    await sendMessageToLumi(session.id, userContent);
-    const aiTitle = await generateSessionTitle(userContent);
-    await consultationRepository.updateSessionTitle(session.id, aiTitle);
+  // 空の相談を作成してIDを返す（最初のメッセージは相談室で送る）
+  createEmptySession: async (): Promise<string> => {
+    const session = await consultationRepository.createSession(buildDefaultTitle());
     return session.id;
   },
 
+  // 一覧を返す前に、作成から一定時間が経った空の相談を片付ける
   getAllSessions: async () => {
+    await consultationRepository.deleteStaleEmptySessions(STALE_EMPTY_SESSION_MINUTES);
     return consultationRepository.getAllSessions();
+  },
+
+  deleteSessionIfEmpty: async (sessionId: string): Promise<void> => {
+    return consultationRepository.deleteSessionIfEmpty(sessionId);
+  },
+
+  updateSessionTitle: async (sessionId: string, title: string): Promise<void> => {
+    const trimmed = title.trim();
+    if (!trimmed) throw new Error("タイトルを入力してください");
+    if (trimmed.length > SESSION_TITLE_MAX_LENGTH) {
+      throw new Error(`タイトルは${SESSION_TITLE_MAX_LENGTH}文字以内で入力してください`);
+    }
+    return consultationRepository.updateSessionTitle(sessionId, trimmed);
   },
 
   // C-06: セッション削除（関連メッセージも含む）

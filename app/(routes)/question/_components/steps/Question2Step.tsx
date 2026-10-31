@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
-import { SelectCard } from "@/app/(routes)/(protected)/register-habit/_components/SelectCard";
+import { SelectCard } from "@/app/(routes)/(protected)/(with-nav)/register-habit/_components/SelectCard";
 import type { TimeBlock } from "@/app/features/habit/habit.type";
 
 const TIME_BLOCKS: { value: TimeBlock; label: string; time: string }[] = [

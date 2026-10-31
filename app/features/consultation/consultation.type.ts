@@ -24,6 +24,9 @@ export type Session = {
   updated_at: string;
 }
 
+// 相談タイトルの最大文字数（サーバーの検証と編集フォームで共有）
+export const SESSION_TITLE_MAX_LENGTH = 30;
+
 export type ChatRoom = Session & {
   messages: Message[];
 }

@@ -32,6 +32,40 @@ export const useDeleteSessionMutation = () => {
   });
 };
 
+// 空の相談を作成して sessionId を返す（画面遷移は呼び出し側で行う）
+export const useCreateSessionMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (): Promise<string> => {
+      const res = await fetch("/api/consultation", { method: "POST" });
+      if (!res.ok) throw new Error("failed to create session");
+      const { sessionId } = await res.json();
+      return sessionId;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: sessionsQueryKey });
+    },
+  });
+};
+
+export const useUpdateSessionTitleMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ sessionId, title }: { sessionId: string; title: string }) => {
+      const res = await fetch(`/api/consultation/${sessionId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title }),
+      });
+      if (!res.ok) throw new Error("failed to update session title");
+    },
+    onSuccess: (_data, { sessionId }) => {
+      queryClient.invalidateQueries({ queryKey: sessionsQueryKey });
+      queryClient.invalidateQueries({ queryKey: [...consultationQueryKey, sessionId] });
+    },
+  });
+};
+
 const fetchChatRoom = async (sessionId: string): Promise<ChatRoom> => {
   const res = await fetch(`/api/consultation/${sessionId}`);
   if (!res.ok) throw new Error("failed to fetch chat room");
